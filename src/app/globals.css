@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global styles */
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -34,6 +35,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -62,6 +64,25 @@ body {
   }
 }
 
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+/* Add this to define text-foreground as a class */
+@layer utilities {
+  .text-foreground {
+    color: rgb(var(--foreground) / <alpha-value>);
+  }
+  .bg-background {
+    background-color: rgb(var(--background) / <alpha-value>);
+  }
+}
+
+
+/* Animations */
 @keyframes blink {
   0%, 50% {
     opacity: 1;
@@ -74,7 +95,6 @@ body {
 .animate-blink {
   animation: blink 1s infinite;
 }
-
 
 @keyframes gradient-move {
   0% {
@@ -96,8 +116,8 @@ body {
 .footer {
   text-align: center;
   padding: 1.5rem 1rem;
-  background-color: #1c1c1e;
-  color: #fff;
+  background-color: var(--foreground);
+  color: var(--background);
 }
 
 .footer-content {
@@ -107,7 +127,7 @@ body {
 }
 
 .footer-links a {
-  color: #0070f3;
+  color: var(--primary);
   text-decoration: none;
   margin: 0 0.5rem;
 }
@@ -120,8 +140,8 @@ body {
 .hero {
   text-align: center;
   padding: 3rem 1.5rem;
-  background: linear-gradient(120deg, #0070f3, #1c1c1e);
-  color: #fff;
+  background: linear-gradient(120deg, var(--primary), var(--foreground));
+  color: var(--background);
 }
 
 .hero-content {
@@ -133,19 +153,19 @@ body {
   margin: 1rem 0.5rem;
   padding: 0.8rem 1.5rem;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-size: 1rem;
   cursor: pointer;
 }
 
 .hero-actions .action-button {
-  background-color: #0070f3;
-  color: #fff;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
 }
 
 .hero-actions .action-button.secondary {
-  background-color: #fff;
-  color: #0070f3;
+  background-color: var(--background);
+  color: var(--primary);
 }
 
 /* Insights */
@@ -161,10 +181,10 @@ body {
 }
 
 .insight-card {
-  background: #f9f9f9;
+  background: var(--background);
   padding: 1.5rem;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   transition: box-shadow 0.3s ease;
 }
 
@@ -189,10 +209,10 @@ body {
 }
 
 .widget-card {
-  background: #f9f9f9;
+  background: var(--background);
   padding: 1.5rem;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   transition: box-shadow 0.3s ease;
 }
 
@@ -204,12 +224,12 @@ body {
   margin-top: 1rem;
   padding: 0.8rem 1.2rem;
   border: none;
-  background-color: #0070f3;
-  color: #fff;
-  border-radius: 8px;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: var(--radius);
   cursor: pointer;
 }
 
 .widget-action:hover {
-  background-color: #005bb5;
+  background-color: var(--primary);
 }

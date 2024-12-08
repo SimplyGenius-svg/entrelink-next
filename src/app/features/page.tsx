@@ -1,6 +1,15 @@
 "use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  FaDatabase,
+  FaBrain,
+  FaFilePowerpoint,
+  FaChartBar,
+  FaComments,
+  FaBook,
+} from "react-icons/fa";
 
 export default function Features() {
   const features = [
@@ -8,42 +17,43 @@ export default function Features() {
       title: "Comprehensive Investor Database",
       description:
         "Access a curated list of over 500,000+ investors, including venture capitalists, angel investors, and investment firms. Filter by industry, location, and investment stage to find the perfect match.",
-      icon: "/icons/database.svg",
+      icon: <FaDatabase />,
     },
     {
       title: "AI-Powered Matchmaking",
       description:
         "Leverage advanced AI algorithms to get matched with investors tailored to your needs, saving you time and increasing the likelihood of success.",
-      icon: "/icons/ai-matchmaking.svg",
+      icon: <FaBrain />,
     },
     {
       title: "Pitch Deck Builder",
       description:
         "Create stunning pitch decks with our intuitive builder. Customize templates, integrate financial projections, and share directly with investors.",
-      icon: "/icons/pitch-builder.svg",
+      icon: <FaFilePowerpoint />,
     },
     {
       title: "Real-Time Analytics",
       description:
         "Track investor engagement with your profile, pitch deck views, and communication metrics. Make informed decisions based on real-time data.",
-      icon: "/icons/analytics.svg",
+      icon: <FaChartBar />,
     },
     {
       title: "Secure Communication Hub",
       description:
         "Chat directly with investors through a secure, centralized messaging platform. Keep all your conversations in one place.",
-      icon: "/icons/chat.svg",
+      icon: <FaComments />,
     },
     {
       title: "Educational Resources",
       description:
         "Access a library of resources, including articles, webinars, and templates, to enhance your fundraising skills and strategy.",
-      icon: "/icons/resources.svg",
+      icon: <FaBook />,
     },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 via-gray-50 to-muted">
+      {/* Top Navigation Bar */}
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b shadow-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-6">
           <Link href="/" className="text-2xl font-bold text-primary">
@@ -94,11 +104,7 @@ export default function Features() {
                   key={index}
                   className="flex flex-col items-center text-center bg-white p-6 shadow-md rounded-lg hover:shadow-xl transition-shadow"
                 >
-                  <img
-                    src={feature.icon}
-                    alt={feature.title}
-                    className="w-16 h-16 mb-6"
-                  />
+                  <div className="text-indigo-500 text-4xl mb-6">{feature.icon}</div>
                   <h3 className="text-xl font-bold text-gray-800">
                     {feature.title}
                   </h3>

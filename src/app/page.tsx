@@ -81,8 +81,7 @@ export default function Home() {
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600 leading-relaxed">
               Access our database of 500,000+ investors across venture capital,
-              angel investors, and investment firms. Powered by AI to match you
-              with the perfect investors.
+              angel investors, and investment firms. Powered by Founders. Supercharged by AI.
             </p>
             <div className="mt-8">
               <Search />

@@ -1,12 +1,14 @@
-// tailwind.config.js
 module.exports = {
   content: [
-    "./src/**/*.{js,ts,jsx,tsx}", // Adjust according to your file structure
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        background: "#f9fafb", // Define your desired background color
+        foreground: "rgb(var(--foreground) / <alpha-value>)",
+        background: "rgb(var(--background) / <alpha-value>)",
       },
     },
   },
