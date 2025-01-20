@@ -48,9 +48,10 @@ export default function Database() {
       <main>
         <section className="px-6 py-20 text-center bg-gradient-to-r from-indigo-100 via-purple-50 to-indigo-50">
           <div className="container mx-auto max-w-4xl">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
-              Discover Entrelink's Investor Database
-            </h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
+  Discover Entrelink&apos;s Investor Database
+</h1>
+
             <p className="mt-6 text-lg text-gray-600 leading-relaxed">
               A quick glimpse into our powerful database connecting founders with investors. 
               Get access to thousands of profiles across industries and regions.
