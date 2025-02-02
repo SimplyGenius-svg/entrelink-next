@@ -4,6 +4,7 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { signUp } from "@/utils/auth";
 import { FirebaseError } from "firebase/app";
+import Link from "next/link"; // Use Next.js' Link component for navigation
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -70,6 +71,12 @@ export default function Signup() {
             {loading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
+        <p className="mt-4 text-sm text-gray-600 text-center">
+          Already have an account?{" "}
+          <Link href="/login" className="text-indigo-600 hover:underline">
+            Log In
+          </Link>
+        </p>
       </div>
     </div>
   );
