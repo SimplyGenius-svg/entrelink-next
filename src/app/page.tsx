@@ -21,8 +21,15 @@ export default function Home() {
 
   // (Change 25) Modal state for interactive table row details
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
-
+  interface ModalContent {
+    name: string;
+    type: string;
+    industry: string;
+    location: string;
+  }
+  
+  const [modalContent, setModalContent] = useState<ModalContent | null>(null);
+  
   // (Change 19) Scroll-to-top button visibility state
   const [showScroll, setShowScroll] = useState(false);
 
@@ -50,10 +57,11 @@ export default function Home() {
   }, []);
 
   // (Change 25) Handler for modal open from table details click
-  const handleOpenModal = (entry) => {
+  const handleOpenModal = (entry: ModalContent) => {
     setModalContent(entry);
     setModalOpen(true);
   };
+  
 
   return (
     <motion.div
