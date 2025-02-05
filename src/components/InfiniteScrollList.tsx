@@ -13,9 +13,9 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
-  // Infinite scrolling logic
+  // Infinite scrolling logic with callback to fetch and add items
   const loadMoreItems = useCallback(async () => {
-    if (isLoading) return; // Prevent duplicate fetches
+    if (isLoading) return; // Prevent multiple fetches
     setIsLoading(true);
     try {
       const newItems = await fetchMoreItems();
@@ -38,12 +38,15 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
       { threshold: 1.0 }
     );
 
-    if (loaderRef.current) {
-      observer.observe(loaderRef.current);
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
     }
 
     return () => {
-      if (loaderRef.current) observer.unobserve(loaderRef.current);
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
     };
   }, [loadMoreItems]);
 
@@ -58,7 +61,7 @@ const InfiniteScrollList: React.FC<InfiniteScrollListProps> = ({
         ))}
       </ul>
       <div ref={loaderRef} className="flex justify-center items-center h-12">
-        {isLoading && <span>Loading...</span>}
+        {isLoading ? <span>Loading...</span> : <span>Scroll down to load more</span>}
       </div>
     </div>
   );
