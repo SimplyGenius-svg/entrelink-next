@@ -1,4 +1,4 @@
-import { Layout, FileText, Users, MessageSquare, Calendar, TrendingUp, Settings } from "lucide-react";
+import {FileText, Users, MessageSquare, Calendar, TrendingUp, Settings } from "lucide-react";
 
 export const sidebarItems = [
   { icon: FileText, label: "Pitch Decks", href: "/pitch-decks" },
