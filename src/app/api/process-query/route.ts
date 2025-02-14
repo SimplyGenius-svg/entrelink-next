@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
+// Define interfaces for structured data
 interface StartupAttributes {
   industry: string;
   business_model: string;
@@ -25,10 +26,24 @@ interface Investor {
   preferred_check_size: string;
 }
 
+interface ApolloInvestor {
+  id?: string;
+  name?: string;
+  organization?: { name?: string };
+  linkedin_url?: string;
+  photo_url?: string;
+  investment_thesis?: string;
+  past_investments?: string[];
+  preferred_check_size?: string;
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
+/**
+ * Extracts structured startup attributes from a user query using OpenAI
+ */
 async function extractStartupAttributes(query: string): Promise<StartupAttributes> {
   console.log("🔍 Extracting startup attributes for:", query);
 
@@ -55,9 +70,7 @@ async function extractStartupAttributes(query: string): Promise<StartupAttribute
     });
 
     const text = response.choices[0]?.message?.content;
-    if (!text) {
-      throw new Error("OpenAI response is empty.");
-    }
+    if (!text) throw new Error("OpenAI response is empty.");
 
     return JSON.parse(text) as StartupAttributes;
   } catch (err) {
@@ -66,14 +79,14 @@ async function extractStartupAttributes(query: string): Promise<StartupAttribute
   }
 }
 
+/**
+ * Fetches matching investors from Apollo API based on startup attributes
+ */
 async function fetchInvestorsFromApollo(attributes: StartupAttributes): Promise<Investor[]> {
   console.log("📡 Fetching investors for attributes:", attributes);
 
   const API_KEY = process.env.APOLLO_API_KEY;
-  if (!API_KEY) {
-    console.error("❌ Apollo API Key is missing");
-    throw new Error("Apollo API Key is missing in .env.local");
-  }
+  if (!API_KEY) throw new Error("Apollo API Key is missing in .env.local");
 
   try {
     const response = await fetch("https://api.apollo.io/api/v1/mixed_people/search", {
@@ -100,17 +113,15 @@ async function fetchInvestorsFromApollo(attributes: StartupAttributes): Promise<
     const text = await response.text();
     console.log("📝 Raw Apollo Response:", text);
 
-    if (!response.ok) {
-      throw new Error(`Apollo API request failed with status ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`Apollo API request failed with status ${response.status}`);
 
     const data = JSON.parse(text);
-    return (data.people || []).map((person: { [key: string]: any }) => ({
+    return (data.people || []).map((person: ApolloInvestor) => ({
       id: String(person.id || ""),
       name: String(person.name || "Unknown"),
       industry: String(person.organization?.name || "Unknown Industry"),
       linkedin_url: String(person.linkedin_url || "#"),
-      match_score: Math.floor(Math.random() * 10) + 90, // Highest precision match (90-100)
+      match_score: Math.floor(Math.random() * 10) + 90, // Score between 90-100
       photo_url: String(person.photo_url || "/default-profile.png"),
       investment_thesis: String(person.investment_thesis || "No thesis available"),
       past_investments: Array.isArray(person.past_investments) ? person.past_investments.map(String) : [],
@@ -122,6 +133,9 @@ async function fetchInvestorsFromApollo(attributes: StartupAttributes): Promise<
   }
 }
 
+/**
+ * API endpoint for processing investor search queries
+ */
 export async function POST(req: NextRequest) {
   try {
     const { query } = await req.json();

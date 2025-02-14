@@ -8,7 +8,6 @@ import Background from "@/components/Background";
 import Link from "next/link";
 import InvestorCard from "@/components/InvestorCard";
 import InvestorModal from "@/components/InvestorModal";
-import Image from "next/image";
 
 interface Investor {
   id: string;
@@ -28,7 +27,6 @@ export default function Home() {
   const [investors, setInvestors] = useState<Investor[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedInvestor, setSelectedInvestor] = useState<Investor | null>(null);
-  const [loadingText, setLoadingText] = useState("Matching investors...");
 
   useEffect(() => {
     const originalText = "Find Your Perfect Investor Match Instantly";
@@ -53,24 +51,6 @@ export default function Home() {
     if (!chatInput.trim()) return;
     setLoading(true);
 
-    const loadingMessages = [
-      "Analyzing market fit...",
-      "Evaluating funding compatibility...",
-      "Checking business model alignment...",
-      "Reviewing industry expertise...",
-      "Finalizing matches..."
-    ];
-
-    let step = 0;
-    const progressInterval = setInterval(() => {
-      if (step >= loadingMessages.length) {
-        clearInterval(progressInterval);
-      } else {
-        setLoadingText(loadingMessages[step]);
-        step++;
-      }
-    }, 1000);
-
     try {
       const response = await fetch("/api/process-query", {
         method: "POST",
@@ -89,7 +69,6 @@ export default function Home() {
       setInvestors([]);
     } finally {
       setLoading(false);
-      clearInterval(progressInterval);
     }
   };
 
@@ -135,7 +114,7 @@ export default function Home() {
         {!loading && investors.length > 0 && (
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             {investors.map((inv) => (
-              <InvestorCard key={inv.id} investor={inv} onClick={() => setSelectedInvestor(inv)} />
+              <InvestorCard key={inv.id} investor={inv} onSelect={() => setSelectedInvestor(inv)} />
             ))}
           </div>
         )}
