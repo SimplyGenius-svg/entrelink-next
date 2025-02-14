@@ -105,16 +105,16 @@ async function fetchInvestorsFromApollo(attributes: StartupAttributes): Promise<
     }
 
     const data = JSON.parse(text);
-    return (data.people || []).map((person: any) => ({
-      id: person.id,
-      name: person.name,
-      industry: person.organization?.name || "Unknown Industry",
-      linkedin_url: person.linkedin_url || "#",
+    return (data.people || []).map((person: { [key: string]: any }) => ({
+      id: String(person.id || ""),
+      name: String(person.name || "Unknown"),
+      industry: String(person.organization?.name || "Unknown Industry"),
+      linkedin_url: String(person.linkedin_url || "#"),
       match_score: Math.floor(Math.random() * 10) + 90, // Highest precision match (90-100)
-      photo_url: person.photo_url || "/default-profile.png",
-      investment_thesis: person.investment_thesis || "No thesis available",
-      past_investments: person.past_investments || [],
-      preferred_check_size: person.preferred_check_size || "Varies",
+      photo_url: String(person.photo_url || "/default-profile.png"),
+      investment_thesis: String(person.investment_thesis || "No thesis available"),
+      past_investments: Array.isArray(person.past_investments) ? person.past_investments.map(String) : [],
+      preferred_check_size: String(person.preferred_check_size || "Varies"),
     }));
   } catch (err) {
     console.error("❌ Apollo API Request Failed:", err);

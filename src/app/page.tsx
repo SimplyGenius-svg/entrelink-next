@@ -8,6 +8,7 @@ import Background from "@/components/Background";
 import Link from "next/link";
 import InvestorCard from "@/components/InvestorCard";
 import InvestorModal from "@/components/InvestorModal";
+import Image from "next/image";
 
 interface Investor {
   id: string;
@@ -26,7 +27,6 @@ export default function Home() {
   const [scrambledText, setScrambledText] = useState("Where Ambition Meets Experience.");
   const [investors, setInvestors] = useState<Investor[]>([]);
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [selectedInvestor, setSelectedInvestor] = useState<Investor | null>(null);
   const [loadingText, setLoadingText] = useState("Matching investors...");
 
@@ -52,7 +52,6 @@ export default function Home() {
   const handleSubmit = async () => {
     if (!chatInput.trim()) return;
     setLoading(true);
-    setProgress(0);
 
     const loadingMessages = [
       "Analyzing market fit...",
@@ -68,7 +67,6 @@ export default function Home() {
         clearInterval(progressInterval);
       } else {
         setLoadingText(loadingMessages[step]);
-        setProgress((step + 1) * 20);
         step++;
       }
     }, 1000);
@@ -86,7 +84,7 @@ export default function Home() {
 
       const data = await response.json();
       setInvestors(data.investors || []);
-    } catch (error) {
+    } catch {
       alert("Failed to fetch investors.");
       setInvestors([]);
     } finally {
@@ -134,7 +132,6 @@ export default function Home() {
             {loading ? <span className="animate-spin">⏳</span> : <FiArrowUpRight size={20} />}
           </button>
         </div>
-        {loading && <div className="text-gray-600 mt-4">{loadingText}</div>}
         {!loading && investors.length > 0 && (
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             {investors.map((inv) => (
@@ -143,10 +140,7 @@ export default function Home() {
           </div>
         )}
       </main>
-
-      {selectedInvestor && (
-        <InvestorModal investor={selectedInvestor} onClose={() => setSelectedInvestor(null)} />
-      )}
+      {selectedInvestor && <InvestorModal investor={selectedInvestor} onClose={() => setSelectedInvestor(null)} />}
     </motion.div>
   );
 }

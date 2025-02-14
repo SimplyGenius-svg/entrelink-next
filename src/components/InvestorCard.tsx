@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
+import Image from "next/image";
 
 interface Investor {
   id: string;
@@ -23,7 +24,13 @@ export default function InvestorCard({ investor, onSelect }: InvestorCardProps) 
       whileHover={{ scale: 1.05 }}
       onClick={onSelect}
     >
-      <img src={investor.photo_url} alt={investor.name} className="w-14 h-14 rounded-full object-cover" />
+      <Image 
+        src={investor.photo_url} 
+        alt={investor.name} 
+        width={56} 
+        height={56} 
+        className="rounded-full object-cover"
+      />
       <div className="flex-1">
         <h3 className="text-lg font-semibold text-black">{investor.name}</h3>
         <p className="text-gray-600 text-sm">{investor.industry}</p>

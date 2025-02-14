@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
+import Image from "next/image";
 
 interface Investor {
   id: string;
@@ -39,7 +40,7 @@ export default function InvestorModal({ investor, onClose }: InvestorModalProps)
             <FiX size={24} />
           </button>
         </div>
-        <img src={investor.photo_url} alt={investor.name} className="w-20 h-20 rounded-full mt-4 mx-auto object-cover" />
+        <Image src={investor.photo_url} alt={investor.name} width={80} height={80} className="rounded-full mt-4 mx-auto object-cover" />
         <p className="text-gray-600 text-center mt-2">{investor.headline}</p>
         <p className="text-sm text-gray-500 text-center">{investor.industry}</p>
 
