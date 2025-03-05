@@ -16,17 +16,18 @@ export default function Sidebar() {
       initial={{ x: -250 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5 }}
-      className={`bg-white shadow-md ${isCollapsed ? "w-20" : "w-64"} h-screen`}
+      className={`bg-white shadow-md ${isCollapsed ? "w-20" : "w-64"} h-screen transition-all duration-300`}
     >
       {/* Header Section */}
-      <div className="flex items-center justify-between p-4">
-        <h2 className={`text-2xl font-bold text-blue-600 ${isCollapsed ? "hidden" : ""}`}>
-          EntreLink
-        </h2>
-        {/* Toggle Button for Collapsibility */}
+      <div className="flex items-center justify-between p-4 border-b">
+        {!isCollapsed && (
+          <h2 className="text-2xl font-bold text-blue-600">EntreLink</h2>
+        )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="text-gray-600 hover:text-blue-600 focus:outline-none"
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-expanded={!isCollapsed}
         >
           {isCollapsed ? <Menu className="h-6 w-6" /> : <X className="h-6 w-6" />}
         </button>
@@ -38,12 +39,12 @@ export default function Sidebar() {
           <Link
             key={item.label}
             href={item.href}
-            className={`flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 ${
+            className={`flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 ${
               pathname === item.href ? "bg-blue-500 text-white" : ""
             }`}
           >
             <item.icon className="h-5 w-5 mr-3" />
-            <span className={`${isCollapsed ? "hidden" : ""}`}>{item.label}</span>
+            <span className={`${isCollapsed ? "hidden" : "block"}`}>{item.label}</span>
           </Link>
         ))}
       </nav>

@@ -74,7 +74,7 @@ export default function Features() {
             <Button variant="ghost" asChild>
               <Link href="/login">Log in</Link>
             </Button>
-            <Button asChild>
+            <Button variant="ghost" asChild>
               <Link href="/signup">Sign up free</Link>
             </Button>
           </div>

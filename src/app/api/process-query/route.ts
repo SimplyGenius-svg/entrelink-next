@@ -1,17 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
+const defaultFilters = {
+  person_titles: ["Investor", "Angel", "Angel Investor", "Venture Capitalist", "VC", "Founder", "CEO", "CTO", "COO", "CFO", "CMO", "Scout"],
+  person_seniorities: ["owner", "founder", "c_suite", "partner"],
+};
+
 // Define interfaces for structured data
 interface StartupAttributes {
-  industry: string;
-  business_model: string;
-  funding_stage: string;
-  target_market: string;
-  key_differentiator: string;
-  revenue_model: string;
-  technology_stack: string;
-  scalability_potential: string;
-  capital_efficiency: string;
+  industries: string[];
+  stage: {
+    startup_stage: string;
+    appropriate_investor_title_prefix: string[];
+  };
+}
+
+interface Query {
+  person_titles: string[];
+  person_seniorities: string[];
 }
 
 interface Investor {
@@ -26,53 +32,84 @@ interface Investor {
   preferred_check_size: string;
 }
 
-interface ApolloInvestor {
-  id?: string;
-  name?: string;
-  organization?: { name?: string };
-  linkedin_url?: string;
-  photo_url?: string;
-  investment_thesis?: string;
-  past_investments?: string[];
-  preferred_check_size?: string;
-}
-
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
 /**
- * Extracts structured startup attributes from a user query using OpenAI
+ * Extracts structured startup attributes from a user query using OpenAI.
  */
-async function extractStartupAttributes(query: string): Promise<StartupAttributes> {
+async function extractStartupAttributes(query: string): Promise<Query> {
   console.log("🔍 Extracting startup attributes for:", query);
 
-  const prompt = `
-  Analyze the following startup idea and extract:
-  - Industry
-  - Business Model
-  - Funding Stage
-  - Target Market
-  - Key Differentiator
-  - Revenue Model
-  - Technology Stack
-  - Scalability Potential
-  - Capital Efficiency
-  Return as JSON format.
+  const systemMessage = "You are an expert that extracts startup attributes from ideas. Return the output as valid JSON without additional text. Reply using keywords only.";
+  const userMessage = `
+Analyze the following startup idea and extract the following attributes:
+- Industry
+- Funding Stage
 
-  Startup Idea: "${query}"
-  `;
+Desired output is an array of keywords to be used in a search engine to find relevant investors.
+
+Startup Idea: "${query}"
+
+Use schema:
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "type": "object",
+  "properties": {
+    "industries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "stage": {
+      "type": "object",
+      "properties": {
+        "startup_stage": {
+          "type": "string"
+        },
+        "appropriate_investor_title_prefix": {
+          "type": "array",
+          "description": "The appropriate prefix for a title like Pre-Seed, Seed, [Industry], etc. Do not include the term 'Investor' in the prefix.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["startup_stage", "appropriate_investor_title_prefix"]
+    }
+  },
+  "required": ["industries", "stage"]
+}`;
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [{ role: "system", content: prompt }],
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: systemMessage },
+        { role: "user", content: userMessage },
+      ],
+      response_format: { type: "json_object" }, // ✅ Fixed response format
     });
 
     const text = response.choices[0]?.message?.content;
     if (!text) throw new Error("OpenAI response is empty.");
 
-    return JSON.parse(text) as StartupAttributes;
+    // Parse the output as JSON
+    const data = JSON.parse(text) as StartupAttributes;
+
+    // Generate search queries
+    const allPrefixes = data.industries
+      .map((i) => i.toLowerCase().trim())
+      .concat(data.stage.appropriate_investor_title_prefix.map((i) => i.toLowerCase().trim()))
+      .flatMap((k) => defaultFilters.person_titles.map((t) => `${k} ${t}`))
+      .map((t) => t.trim().toLowerCase());
+
+    return {
+      person_titles: allPrefixes,
+      person_seniorities: defaultFilters.person_seniorities,
+    };
   } catch (err) {
     console.error("❌ Error extracting startup attributes:", err);
     throw new Error("Failed to extract startup attributes.");
@@ -80,15 +117,20 @@ async function extractStartupAttributes(query: string): Promise<StartupAttribute
 }
 
 /**
- * Fetches matching investors from Apollo API based on startup attributes
+ * Fetches matching investors from Apollo API based on startup attributes.
  */
-async function fetchInvestorsFromApollo(attributes: StartupAttributes): Promise<Investor[]> {
+async function fetchInvestorsFromApollo(attributes: Query): Promise<Investor[]> {
   console.log("📡 Fetching investors for attributes:", attributes);
 
   const API_KEY = process.env.APOLLO_API_KEY;
   if (!API_KEY) throw new Error("Apollo API Key is missing in .env.local");
 
   try {
+    // Reduce the number of person_titles to fit Apollo's request limits
+    const MAX_TITLES = 10; // ✅ Reduced to avoid "Value too long" errors
+    const limitedPersonTitles = attributes.person_titles.slice(0, MAX_TITLES);
+    console.log(`🔹 Using only ${MAX_TITLES} person_titles to prevent API errors.`);
+
     const response = await fetch("https://api.apollo.io/api/v1/mixed_people/search", {
       method: "POST",
       headers: {
@@ -96,27 +138,21 @@ async function fetchInvestorsFromApollo(attributes: StartupAttributes): Promise<
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        filters: {
-          industry: attributes.industry || "Technology",
-          funding_stage: attributes.funding_stage || "Seed",
-          preferred_markets: [attributes.target_market || "North America"],
-          revenue_model: attributes.revenue_model || "Subscription",
-          technology_stack: attributes.technology_stack || "Cloud-Based",
-          scalability_potential: attributes.scalability_potential || "High",
-          capital_efficiency: attributes.capital_efficiency || "Efficient",
-        },
-        sort_by: "relevance",
-        limit: 20,
+        person_titles: limitedPersonTitles,
+        person_seniorities: attributes.person_seniorities,
       }),
     });
 
     const text = await response.text();
     console.log("📝 Raw Apollo Response:", text);
 
-    if (!response.ok) throw new Error(`Apollo API request failed with status ${response.status}`);
+    if (!response.ok) {
+      console.error(`❌ Apollo API request failed with status ${response.status} - ${text}`);
+      throw new Error(`Apollo API request failed with status ${response.status}`);
+    }
 
     const data = JSON.parse(text);
-    return (data.people || []).map((person: ApolloInvestor) => ({
+    return (data.people || []).map((person: any) => ({
       id: String(person.id || ""),
       name: String(person.name || "Unknown"),
       industry: String(person.organization?.name || "Unknown Industry"),
@@ -134,7 +170,7 @@ async function fetchInvestorsFromApollo(attributes: StartupAttributes): Promise<
 }
 
 /**
- * API endpoint for processing investor search queries
+ * Handles API requests to find investors based on a startup query.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -143,7 +179,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No query provided" }, { status: 400 });
     }
 
+    // Extract dynamic startup attributes based on the user's query
     const attributes = await extractStartupAttributes(query);
+
+    // Fetch investors using the dynamically generated filters
     const investors = await fetchInvestorsFromApollo(attributes);
 
     return NextResponse.json({ investors });
