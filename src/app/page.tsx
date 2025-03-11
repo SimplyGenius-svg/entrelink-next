@@ -1,18 +1,32 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { Search } from "@/components/search";
+import { motion, AnimatePresence } from "framer-motion";
 import { Stats } from "@/components/stats";
 import { CompanyLogos } from "@/components/company-logos";
-//import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
+import dynamic from "next/dynamic";
+const LaunchPad = dynamic(() => import("./launchpad/page"), { ssr: false });
 
 export default function Home() {
   const words = useMemo(() => ["cofounder.", "investor.", "hire."], []);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [visibleWord, setVisibleWord] = useState(words[0]);
   const [isFading, setIsFading] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Handle LaunchPad search submission
+  const handleSearchSubmit = (query: string) => {
+    setSearchQuery(query);
+    setShowResults(true);
+  };
+
+  // Handle closing results overlay
+  const closeResults = () => {
+    setShowResults(false);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -30,6 +44,57 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Navbar */}
       <Navbar />
+
+      {/* Results Overlay */}
+      <AnimatePresence>
+        {showResults && (
+          <motion.div 
+            className="fixed inset-0 bg-white z-50 overflow-y-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="container mx-auto pt-24 pb-12 px-4">
+              {/* Close Button */}
+              <button 
+                onClick={closeResults}
+                className="absolute top-6 right-6 text-gray-500 hover:text-gray-800"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              
+              {/* Search Input (moved to top) */}
+              <motion.div 
+                initial={{ y: 200 }}
+                animate={{ y: 0 }}
+                className="mb-8"
+              >
+                <LaunchPad 
+                  homePageMode={true}
+                  initialQuery={searchQuery}
+                  onSubmit={handleSearchSubmit}
+                  showResultsInline={true}
+                />
+              </motion.div>
+              
+              {/* Results Section */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, transition: { delay: 0.3 } }}
+              >
+                <h2 className="text-2xl font-bold mb-6">Investor Results</h2>
+                <LaunchPad 
+                  resultsOnlyMode={true}
+                  query={searchQuery}
+                />
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Hero Section */}
       <main className="relative flex flex-col items-center text-center px-6 py-24 bg-gradient-to-b from-indigo-100 to-white">
@@ -53,8 +118,13 @@ export default function Home() {
           <p className="mt-6 text-lg text-gray-600">
             Connect with over 500,000 investors, founders, and resources to grow your startup. Powered by AI. Designed for Founders.
           </p>
-          <div className="mt-8">
-            <Search />
+          
+          {/* LaunchPad Search Component */}
+          <div className="mt-8 max-w-xl mx-auto">
+            <LaunchPad 
+              homePageMode={true} 
+              onSubmit={handleSearchSubmit}
+            />
           </div>
         </motion.div>
       </main>

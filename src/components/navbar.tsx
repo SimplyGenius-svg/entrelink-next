@@ -47,10 +47,10 @@ export function Navbar() {
           })}
         </nav>
         <div className="flex space-x-4">
-          <Button variant="ghost">
+          <Button variant="ghost" className="border border-indigo-600 text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
             <Link href="/login">Log in</Link>
           </Button>
-          <Button>
+          <Button className="bg-indigo-600 text-white hover:bg-indigo-700 transition-colors">
             <Link href="/signup">Sign up free</Link>
           </Button>
         </div>
