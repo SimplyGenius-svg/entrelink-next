@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { Navbar } from "@/components/navbar";
 
 export default function Database() {
   const sampleData = [
@@ -10,47 +11,16 @@ export default function Database() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 via-gray-50 to-muted">
-      {/* Header */}
-      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b shadow-sm">
-        <div className="container mx-auto flex h-16 items-center justify-between px-6">
-          <Link href="/" className="text-2xl font-bold text-primary">
-            Entrelink
-          </Link>
-          <nav className="hidden md:flex items-center gap-6">
-            {["Database", "Features", "Resources", "Pricing"].map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
-                className="text-sm font-medium text-gray-700 hover:text-primary transition-colors"
-              >
-                {item}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-gray-700 hover:text-primary"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition"
-            >
-              Sign up free
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* Navbar Component */}
+      <Navbar />
 
       {/* Hero Section */}
       <main>
         <section className="px-6 py-20 text-center bg-gradient-to-r from-indigo-100 via-purple-50 to-indigo-50">
           <div className="container mx-auto max-w-4xl">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
-  Discover Entrelink&apos;s Investor Database
-</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
+              Discover Entrelink&apos;s Investor Database
+            </h1>
 
             <p className="mt-6 text-lg text-gray-600 leading-relaxed">
               A quick glimpse into our powerful database connecting founders with investors. 

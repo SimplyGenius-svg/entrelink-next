@@ -2,8 +2,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
+  const pathname = usePathname();
+
   return (
     <header className="sticky top-0 z-10 bg-white shadow-md border-b">
       <div className="container mx-auto flex items-center justify-between h-20 px-6">
@@ -20,15 +23,28 @@ export function Navbar() {
           />
         </Link>
         <nav className="hidden md:flex space-x-6">
-          {["Database", "Features", "Resources", "Pricing"].map((item) => (
-            <Link
-              key={item}
-              href={`/${item.toLowerCase()}`}
-              className="text-sm font-medium text-gray-700 hover:text-indigo-500 transition"
-            >
-              {item}
-            </Link>
-          ))}
+          {["Database", "Features", "Resources", "Pricing"].map((item) => {
+            const href = `/${item.toLowerCase()}`;
+            const isActive = pathname === href;
+            
+            return (
+              <Link
+                key={item}
+                href={href}
+                className={`text-sm font-medium transition relative ${
+                  isActive 
+                    ? "text-indigo-600" 
+                    : "text-gray-700 hover:text-indigo-500"
+                } ${
+                  isActive 
+                    ? "after:absolute after:bottom-[-5px] after:left-0 after:w-full after:h-0.5 after:bg-indigo-600" 
+                    : ""
+                }`}
+              >
+                {item}
+              </Link>
+            );
+          })}
         </nav>
         <div className="flex space-x-4">
           <Button variant="ghost">

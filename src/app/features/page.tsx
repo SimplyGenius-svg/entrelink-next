@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Navbar } from "@/components/navbar";
 import {
   FaDatabase,
   FaBrain,
@@ -53,33 +54,8 @@ export default function Features() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 via-gray-50 to-muted">
-      {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b shadow-sm">
-        <div className="container mx-auto flex h-16 items-center justify-between px-6">
-          <Link href="/" className="text-2xl font-bold text-primary">
-            Entrelink
-          </Link>
-          <nav className="hidden md:flex items-center gap-6">
-            {["Database", "Features", "Resources", "Pricing"].map((item) => (
-              <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
-                className="text-sm font-medium text-gray-700 hover:text-primary transition-colors"
-              >
-                {item}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Log in</Link>
-            </Button>
-            <Button variant="ghost" asChild>
-              <Link href="/signup">Sign up free</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      {/* Replace custom header with Navbar component */}
+      <Navbar />
 
       <main>
         {/* Hero Section */}
