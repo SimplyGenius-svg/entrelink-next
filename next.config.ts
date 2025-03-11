@@ -6,7 +6,7 @@ dotenv.config(); // Load environment variables
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["media.licdn.com", "static.licdn.com"], // Allow LinkedIn profile images
+    domains: ["media.licdn.com", "static.licdn.com", "example.com"], // Allow LinkedIn profile images and example.com
     remotePatterns: [
       {
         protocol: "https",
