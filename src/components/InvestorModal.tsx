@@ -14,8 +14,9 @@ interface Investor {
   match_score: number;
   photo_url?: string;
   headline: string;
-  match_explanation?: string[];
+  match_explanation: string[];
 }
+
 
 interface InvestorModalProps {
   investor: Investor | null;

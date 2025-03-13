@@ -5,7 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InvestorCard from "@/components/InvestorCard";
 import InvestorModal from "@/components/InvestorModal";
-import { db, collection, addDoc, serverTimestamp } from "@/firebase";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import EmailSidebar from "@/components/EmailSidebar";
@@ -13,8 +12,11 @@ import EmailSidebar from "@/components/EmailSidebar";
 interface Investor {
   id: string;
   name: string;
+  company?: string;
   industry: string;
+  location?: string;
   linkedin_url: string;
+  email?: string;
   match_score: number;
   photo_url?: string;
   headline: string;
@@ -32,9 +34,9 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
   const [investors, setInvestors] = useState<Investor[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedInvestor, setSelectedInvestor] = useState<Investor | null>(null);
+  const [showSidebar, setShowSidebar] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -72,8 +74,12 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
     setShowSidebar(true);
   };
 
+  const handleCloseSidebar = () => setShowSidebar(false);
+  const handleCloseModal = () => setSelectedInvestor(null);
+
   return (
     <div className="w-full flex flex-col items-center">
+      {/* Startup Description Input */}
       <div className="max-w-2xl w-full mt-10">
         <textarea
           ref={textAreaRef}
@@ -89,23 +95,28 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
         </Button>
       </div>
 
+      {/* Investor Results */}
       <div className="mt-10 max-w-4xl w-full">
         <h2 className="text-xl font-bold mb-4 text-center">Investor Results</h2>
         {loading ? (
           <p className="text-center text-gray-500">Loading investors...</p>
+        ) : investors.length === 0 ? (
+          <p className="text-center text-gray-500">No investors found. Try refining your search.</p>
         ) : (
           <>
-            {investors.length === 0 ? (
-              <p className="text-center text-gray-500">No investors found. Try refining your search.</p>
-            ) : (
-              investors.slice(0, showMore || signedIn ? investors.length : 15).map((inv) => (
-                <InvestorCard key={inv.id} investor={inv} onSelect={() => setSelectedInvestor(inv)} className="mb-4" />
-              ))
-            )}
+            {investors.slice(0, showMore || signedIn ? investors.length : 15).map((inv) => (
+              <InvestorCard
+                key={inv.id}
+                investor={inv}
+                onSelect={() => setSelectedInvestor(inv)}
+                onOpenSidebar={handleOpenSidebar} // ✅ Ensures InvestorCard receives this
+                className="mb-4"
+              />
+            ))}
             {!showMore && investors.length > 15 && (
               <div className="text-center mt-6">
                 <Button
-                  className="px-6 py-3 text-white bg-gray-500 cursor-not-allowed"
+                  className="px-6 py-3 text-white bg-gray-500"
                   disabled={!signedIn}
                   onClick={() => setShowMore(true)}
                 >
@@ -116,19 +127,16 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
           </>
         )}
       </div>
+
       <ToastContainer position="top-right" autoClose={3000} />
 
+      {/* Investor Modal */}
       {selectedInvestor && !showSidebar && (
-        <InvestorModal
-          investor={selectedInvestor}
-          onClose={() => setSelectedInvestor(null)}
-          onOpenSidebar={handleOpenSidebar}
-        />
+        <InvestorModal investor={selectedInvestor} onClose={handleCloseModal} onOpenSidebar={handleOpenSidebar} />
       )}
 
-      {showSidebar && selectedInvestor && (
-        <EmailSidebar investor={selectedInvestor} onClose={() => setShowSidebar(false)} />
-      )}
+      {/* Email Sidebar */}
+      {showSidebar && selectedInvestor && <EmailSidebar investor={selectedInvestor} onClose={handleCloseSidebar} />}
     </div>
   );
 }
