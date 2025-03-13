@@ -1,20 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
+import { db, collection, addDoc, serverTimestamp } from "@/firebase";
 
 export async function POST(req: NextRequest) {
   try {
-    const { investor, userEmail } = await req.json();
+    const body = await req.json();
+    const { 
+      investorId, 
+      investorName, 
+      investorEmail, 
+      investorCompany,
+      subject, 
+      emailBody 
+    } = body;
 
-    if (!investor || !userEmail) {
-      return NextResponse.json({ error: "Investor and user email are required." }, { status: 400 });
+    // Validate required fields
+    if (!investorId || !subject || !emailBody) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
-    // Here, you can log the request, store it in a database, or send a notification.
-    console.log(`User ${userEmail} requested email access for investor ${investor.name}`);
+    // Add to Firestore
+    const docRef = await addDoc(collection(db, "emailRequests"), {
+      investorId,
+      investorName,
+      investorEmail,
+      investorCompany,
+      subject,
+      emailBody,
+      status: "pending",
+      createdAt: serverTimestamp(),
+    });
 
-    // Simulate sending a request notification (You can integrate email APIs like SendGrid)
-    return NextResponse.json({ message: "Email access request sent." }, { status: 200 });
+    return NextResponse.json({
+      message: "Email request submitted successfully",
+      id: docRef.id
+    });
   } catch (error) {
     console.error("Error handling email request:", error);
-    return NextResponse.json({ error: "Failed to process request." }, { status: 500 });
+    return NextResponse.json(
+      { message: "Failed to process email request" },
+      { status: 500 }
+    );
   }
 }
