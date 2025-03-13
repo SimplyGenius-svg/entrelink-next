@@ -7,6 +7,9 @@ interface Investor {
   name: string;
   email?: string;
   company?: string;
+  industry?: string;
+  portfolio?: string[];
+  investmentFocus?: string[];
 }
 
 interface EmailSidebarProps {
@@ -22,6 +25,7 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
 
   // Validate email format
@@ -32,6 +36,12 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
 
   // Generate email using OpenAI API
   const handleGenerateEmail = async () => {
+    // Check if sender name and subject are provided
+    if (!senderName.trim()) {
+      setErrors({...errors, senderName: "Your name is required to generate an email"});
+      return;
+    }
+    
     if (!subject.trim()) {
       setErrors({...errors, subject: "Subject is required for generating an email"});
       return;
@@ -42,8 +52,24 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
       const response = await fetch("/api/generate-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject }),
+        body: JSON.stringify({
+          subject,
+          senderName,
+          investorDetails: {
+            name: investor.name,
+            company: investor.company || "",
+            industry: investor.industry || "",
+            portfolio: investor.portfolio || [],
+            investmentFocus: investor.investmentFocus || [],
+            // Add any other investor details you have available
+          }
+        }),
       });
+      
+      if (!response.ok) {
+        throw new Error("Failed to generate email");
+      }
+      
       const data = await response.json();
       setEmailBody(data.generatedEmail || "Failed to generate email.");
     } catch (error) {
@@ -74,6 +100,10 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
     
     if (!emailBody.trim()) {
       newErrors.emailBody = "Email body is required";
+    }
+    
+    if (!termsAccepted) {
+      newErrors.terms = "You must agree to the Terms of Service";
     }
     
     setErrors(newErrors);
@@ -137,6 +167,9 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
       {/* Sender Info Section */}
       <div className="mb-4">
         <h3 className="text-sm font-semibold text-gray-700 mb-2">Your Information</h3>
+        <p className="text-xs text-gray-500 mb-3">
+          Please enter your full name and personal email address where you wish to receive communications.
+        </p>
         
         {/* Sender Name */}
         <div className="mb-2">
@@ -204,6 +237,13 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
         )}
       </div>
 
+      {/* Email Generation Info */}
+      <div className="mb-3">
+        <p className="text-xs text-gray-500">
+          <span className="font-medium text-indigo-600">Time-saving tip:</span> Enter your name and a subject above, then click "Generate Email" to create an AI-drafted message personalized to this investor, or write your own message below.
+        </p>
+      </div>
+
       {/* Email Body */}
       <div className="mb-2 flex-grow">
         <textarea
@@ -232,6 +272,44 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
         >
           {generating ? "Generating..." : "Generate Email"}
         </button>
+
+        {/* Review reminder */}
+        {/* <div className="mt-3 mb-2">
+          <p className="text-sm text-amber-600 font-medium flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            Please review your email carefully before proceeding
+          </p>
+        </div> */}
+        
+        {/* Terms of Service Checkbox */}
+        <div className="flex items-start mt-2 mb-3">
+          <div className="flex h-5 items-center">
+            <input
+              id="terms"
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => {
+                setTermsAccepted(e.target.checked);
+                if (errors.terms) {
+                  setErrors({...errors, terms: ""});
+                }
+              }}
+              className={`h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 ${
+                errors.terms ? 'border-red-500' : ''
+              }`}
+            />
+          </div>
+          <div className="ml-3 text-sm">
+            <label htmlFor="terms" className="text-gray-700">
+              I agree to the <a href="/terms" target="_blank" className="text-indigo-600 hover:underline">Terms of Service</a> and <a href="/privacy" target="_blank" className="text-indigo-600 hover:underline">Privacy Policy</a>
+            </label>
+            {errors.terms && (
+              <p className="text-red-500 text-xs mt-1">{errors.terms}</p>
+            )}
+          </div>
+        </div>
 
         {/* Request to Send Button */}
         <button

@@ -7,7 +7,10 @@ import { CompanyLogos } from "@/components/company-logos";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import dynamic from "next/dynamic";
+
+// Dynamically import components to avoid SSR issues
 const LaunchPad = dynamic(() => import("../components/launchpad/launchpad"), { ssr: false });
+const ParticleBackground = dynamic(() => import("../components/particle-background"), { ssr: false });
 
 export default function Home() {
   const words = useMemo(() => ["cofounder.", "investor.", "hire."], []);
@@ -96,12 +99,18 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Hero Section */}
-      <main className="relative flex flex-col items-center text-center px-6 py-24 bg-gradient-to-b from-indigo-100 to-white">
+      {/* Hero Section with Particle Background */}
+      <main className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gradient-to-b from-indigo-100 to-white relative overflow-hidden">
+        {/* Particle Background */}
+        <div className="absolute inset-0 z-0">
+          <ParticleBackground />
+        </div>
+        
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="w-full max-w-2xl mx-auto z-10 -mt-12" // Changed from -mt-10 to mt-16 to push content down
         >
           <h1 className="text-5xl font-extrabold text-gray-800 leading-tight">
             Find your next {" "}
@@ -129,7 +138,7 @@ export default function Home() {
         </motion.div>
       </main>
 
-      {/* Stats Section */}
+      {/* Stats Section - Separate from Hero */}
       <section className="py-16 bg-white">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}

@@ -37,6 +37,8 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
   const [showSidebar, setShowSidebar] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
+  const [charCount, setCharCount] = useState(initialQuery.length);
+  const MAX_CHARS = 140;
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -79,54 +81,72 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Startup Description Input */}
-      <div className="max-w-2xl w-full mt-10">
-        <textarea
-          ref={textAreaRef}
-          placeholder="Describe your startup to find the perfect investor match..."
-          value={startupDescription}
-          onChange={(e) => setStartupDescription(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSubmit()}
-          rows={2}
-          className="w-full p-4 border rounded-lg focus:outline-none"
-        />
-        <Button className="mt-3 w-full" onClick={handleSubmit} disabled={loading}>
-          {loading ? "Searching..." : "Find Investors"}
-        </Button>
+      {/* Main Content - Centered */}
+      <div className="w-full max-w-2xl mx-auto flex flex-col items-center mt-10">
+        <h1 className="text-3xl font-bold mb-6 text-center">Find your next cofounder.</h1>
+        
+        {/* Startup Description Input */}
+        <div className="w-full">
+          <textarea
+            ref={textAreaRef}
+            placeholder="Describe your startup to find the perfect investor match..."
+            value={startupDescription}
+            onChange={(e) => {
+              if (e.target.value.length <= MAX_CHARS) {
+                setStartupDescription(e.target.value);
+                setCharCount(e.target.value.length);
+              }
+            }}
+            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSubmit()}
+            rows={2}
+            className="w-full p-4 border rounded-lg focus:outline-none border-gray-300 bg-white resize-none"
+            maxLength={MAX_CHARS}
+          />
+          <small className="text-gray-500 block mt-1 mb-2">{charCount}/{MAX_CHARS} characters</small>
+          <Button 
+            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white" 
+            onClick={handleSubmit} 
+            disabled={loading}
+          >
+            {loading ? "Searching..." : "Find Investors"}
+          </Button>
+        </div>
       </div>
 
-      {/* Investor Results */}
-      <div className="mt-10 max-w-4xl w-full">
-        <h2 className="text-xl font-bold mb-4 text-center">Investor Results</h2>
-        {loading ? (
-          <p className="text-center text-gray-500">Loading investors...</p>
-        ) : investors.length === 0 ? (
-          <p className="text-center text-gray-500">No investors found. Try refining your search.</p>
-        ) : (
-          <>
-            {investors.slice(0, showMore || signedIn ? investors.length : 15).map((inv) => (
-              <InvestorCard
-                key={inv.id}
-                investor={inv}
-                onSelect={() => setSelectedInvestor(inv)}
-                onOpenSidebar={handleOpenSidebar} // ✅ Ensures InvestorCard receives this
-                className="mb-4"
-              />
-            ))}
-            {!showMore && investors.length > 15 && (
-              <div className="text-center mt-6">
-                <Button
-                  className="px-6 py-3 text-white bg-gray-500"
-                  disabled={!signedIn}
-                  onClick={() => setShowMore(true)}
-                >
-                  {signedIn ? "Load More" : "Sign in to Unlock More"}
-                </Button>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+      {/* Investor Results - Only shown when there are results */}
+      {(loading || investors.length > 0) && (
+        <div className="mt-10 max-w-4xl w-full">
+          <h2 className="text-xl font-bold mb-4 text-center">Investor Results</h2>
+          {loading ? (
+            <p className="text-center text-gray-500">Loading investors...</p>
+          ) : investors.length === 0 ? (
+            <p className="text-center text-gray-500">No investors found. Try refining your search.</p>
+          ) : (
+            <>
+              {investors.slice(0, showMore || signedIn ? investors.length : 15).map((inv) => (
+                <InvestorCard
+                  key={inv.id}
+                  investor={inv}
+                  onSelect={() => setSelectedInvestor(inv)}
+                  onOpenSidebar={handleOpenSidebar}
+                  className="mb-4"
+                />
+              ))}
+              {!showMore && investors.length > 15 && (
+                <div className="text-center mt-6">
+                  <Button
+                    className="px-6 py-3 text-white bg-gray-500"
+                    disabled={!signedIn}
+                    onClick={() => setShowMore(true)}
+                  >
+                    {signedIn ? "Load More" : "Sign in to Unlock More"}
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       <ToastContainer position="top-right" autoClose={3000} />
 
