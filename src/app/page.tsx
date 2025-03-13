@@ -110,7 +110,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full max-w-2xl mx-auto z-10 -mt-12" // Changed from -mt-10 to mt-16 to push content down
+          className="w-full max-w-2xl mx-auto z-10 -mt-12"
         >
           <h1 className="text-5xl font-extrabold text-gray-800 leading-tight">
             Find your next {" "}

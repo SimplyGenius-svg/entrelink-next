@@ -8,7 +8,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-10 bg-white shadow-md border-b">
+    <header className="sticky top-0 z-50 bg-white shadow-md border-b">
       <div className="container mx-auto flex items-center justify-between h-20 px-6">
         <Link href="/" className="flex items-center">
           <Image 
@@ -22,7 +22,7 @@ export function Navbar() {
             onError={(e) => console.error("Image failed to load", e)}
           />
         </Link>
-        <nav className="hidden md:flex space-x-6">
+        {/* <nav className="hidden md:flex space-x-6">
           {["Database", "Features", "Resources", "Pricing"].map((item) => {
             const href = `/${item.toLowerCase()}`;
             const isActive = pathname === href;
@@ -45,7 +45,7 @@ export function Navbar() {
               </Link>
             );
           })}
-        </nav>
+        </nav> */}
         <div className="flex space-x-4">
           <Button variant="ghost" className="border border-indigo-600 text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
             <Link href="/login">Log in</Link>
