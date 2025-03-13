@@ -7,7 +7,7 @@ import { CompanyLogos } from "@/components/company-logos";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import dynamic from "next/dynamic";
-const LaunchPad = dynamic(() => import("./launchpad/page"), { ssr: false });
+const LaunchPad = dynamic(() => import("../components/launchpad/launchpad"), { ssr: false });
 
 export default function Home() {
   const words = useMemo(() => ["cofounder.", "investor.", "hire."], []);

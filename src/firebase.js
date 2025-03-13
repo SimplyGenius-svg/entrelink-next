@@ -23,4 +23,4 @@ const db = getFirestore(app);
 export const auth = getAuth(app);
 
 // Export Firestore functions
-export { db, collection, addDoc, serverTimestamp };
+export { db, collection, addDoc, serverTimestamp, doc, setDoc };

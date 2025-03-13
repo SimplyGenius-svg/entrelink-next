@@ -127,7 +127,7 @@ async function fetchInvestorsFromApollo(attributes: Query): Promise<Investor[]> 
 
   try {
     // Reduce the number of person_titles to fit Apollo's request limits
-    const MAX_TITLES = 10; // ✅ Reduced to avoid "Value too long" errors
+    const MAX_TITLES = 9; // ✅ Reduced to avoid "Value too long" errors
     const limitedPersonTitles = attributes.person_titles.slice(0, MAX_TITLES);
     console.log(`🔹 Using only ${MAX_TITLES} person_titles to prevent API errors.`);
 
