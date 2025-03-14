@@ -25,7 +25,6 @@ export default function Home() {
     const timer = setTimeout(() => {
       setPageLoading(false);
     }, 3000);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -39,13 +38,11 @@ export default function Home() {
         timeoutId = setTimeout(() => setIsDeleting(true), 1000);
         return;
       }
-
       if (isDeleting && displayText === "") {
         setIsDeleting(false);
         setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
         return;
       }
-
       timeoutId = setTimeout(() => {
         setDisplayText(
           isDeleting
@@ -114,7 +111,7 @@ export default function Home() {
           className="w-full max-w-2xl mx-auto z-10"
         >
           <h1 className="text-5xl font-extrabold text-gray-800 leading-tight">
-            Find your next {" "}
+            Find your next{" "}
             <span className="inline-block relative">
               <span className="text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text">
                 {displayText}
@@ -126,7 +123,7 @@ export default function Home() {
             </span>
           </h1>
           <p className="mt-6 text-lg text-gray-600">
-            Connect with over 500,000 investors, founders, and resources to grow your startup.
+            Join a vibrant community of over 500,000 investors, founders, and industry experts, and access the resources you need to accelerate your startup's growth.
           </p>
 
           <div className="mt-8 max-w-xl mx-auto">

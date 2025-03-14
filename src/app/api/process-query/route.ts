@@ -3,9 +3,9 @@ import OpenAI from "openai";
 
 const defaultFilters = {
   person_titles: [
-    "Investor", "Angel", "Angel Investor", "Venture Capitalist", "VC", "Founder", "CEO", "CTO", "COO", "CFO", "CMO", "Scout"
+     "Venture Partner", "Investor", "Angel", "Angel Investor", "Venture", "Founder", "CEO", "CTO", "COO", "CFO", "CMO", "Scout"
   ],
-  person_seniorities: ["owner", "founder", "c_suite", "partner"],
+  person_seniorities: ["investor", "founder", "c_suite", "owner", "partner"],
 };
 
 interface StartupAttributes {
