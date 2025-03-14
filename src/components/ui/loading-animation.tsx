@@ -9,12 +9,12 @@ interface LoadingAnimationProps {
 
 export function LoadingAnimation({ 
   width = 160, 
-  height = 180,
+  height = 200,
   bgColor = "transparent"
 }: LoadingAnimationProps) {
   return (
     <div className="loading-container" style={{ backgroundColor: bgColor }}>
-      <svg className="loading-logo" viewBox="-20 -20 200 220" 
+      <svg className="loading-logo" viewBox="-20 -20 200 250" 
         style={{ width: `${width}px`, height: `${height}px` }}
         xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -24,21 +24,31 @@ export function LoadingAnimation({
           </linearGradient>
         </defs>
        
-        {/* Unswapped Top and Middle Layer Positions */}
+        {/* Bottom Brick with Increased Thickness */}
         <g className="layer-group">
-          <polygon points="60,50 120,80 120,90 60,120 0,90 0,80" 
-            stroke="url(#gradient)" strokeWidth="4" fill="transparent"/>
+          <polygon points="60,110 120,140 120,155 60,185 0,155 0,140" stroke="url(#gradient)" strokeWidth="4" fill="white"/>
+          <line x1="0" y1="140" x2="60" y2="110" stroke="url(#gradient)" strokeWidth="4"/>
+          <line x1="120" y1="140" x2="60" y2="110" stroke="url(#gradient)" strokeWidth="4"/>
+          <line x1="0" y1="140" x2="60" y2="170" stroke="url(#gradient)" strokeWidth="4"/>
+          <line x1="120" y1="140" x2="60" y2="170" stroke="url(#gradient)" strokeWidth="4"/>
         </g>
        
+        {/* Middle Brick with Increased Thickness */}
         <g className="layer-group">
-          <polygon points="60,10 120,40 120,50 60,80 0,50 0,40" 
-            stroke="url(#gradient)" strokeWidth="4" fill="transparent"/>
+          <polygon points="60,65 120,95 120,110 60,140 0,110 0,95" stroke="url(#gradient)" strokeWidth="4" fill="white"/>
+          <line x1="0" y1="95" x2="60" y2="65" stroke="url(#gradient)" strokeWidth="4"/>
+          <line x1="120" y1="95" x2="60" y2="65" stroke="url(#gradient)" strokeWidth="4"/>
+          <line x1="0" y1="95" x2="60" y2="125" stroke="url(#gradient)" strokeWidth="4"/>
+          <line x1="120" y1="95" x2="60" y2="125" stroke="url(#gradient)" strokeWidth="4"/>
         </g>
        
-        {/* Bottom Layer Group */}
+        {/* Top Brick with Increased Thickness */}
         <g className="layer-group">
-          <polygon points="60,90 120,120 120,130 60,160 0,130 0,120" 
-            stroke="url(#gradient)" strokeWidth="4" fill="transparent"/>
+          <polygon points="60,20 120,50 120,65 60,95 0,65 0,50" stroke="url(#gradient)" strokeWidth="4" fill="white"/>
+          <line x1="0" y1="50" x2="60" y2="20" stroke="url(#gradient)" strokeWidth="4"/>
+          <line x1="120" y1="50" x2="60" y2="20" stroke="url(#gradient)" strokeWidth="4"/>
+          <line x1="0" y1="50" x2="60" y2="80" stroke="url(#gradient)" strokeWidth="4"/>
+          <line x1="120" y1="50" x2="60" y2="80" stroke="url(#gradient)" strokeWidth="4"/>
         </g>
       </svg>
 
@@ -61,16 +71,16 @@ export function LoadingAnimation({
           opacity: 0;
         }
         
-        .layer-group:nth-child(1) {
+        .layer-group:nth-child(3) {
           animation-delay: 0s;
         }
         
-        .layer-group:nth-child(2) {
-          animation-delay: 0.4s;
+        .layer-group:nth-child(4) {
+          animation-delay: 0.3s;
         }
         
-        .layer-group:nth-child(3) {
-          animation-delay: 0.8s;
+        .layer-group:nth-child(5) {
+          animation-delay: 0.6s;
         }
         
         @keyframes fall-reset {

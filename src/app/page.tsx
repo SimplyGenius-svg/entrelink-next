@@ -1,10 +1,13 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Stats } from "@/components/stats";
+import { CompanyLogos } from "@/components/company-logos";
+import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import dynamic from "next/dynamic";
-import { LoadingOverlay } from "@/components/ui/loading-animation";
+import { LoadingOverlay } from "@/components/ui/loading-animation"; // Import the loading component
 
 // Dynamically import components to avoid SSR issues
 const LaunchPad = dynamic(() => import("../components/launchpad/launchpad"), { ssr: false });
@@ -139,6 +142,62 @@ export default function Home() {
       <section className="py-16 bg-white">
         <Stats />
       </section>
+
+      {/* Footer */}
+      <footer className="py-12 bg-gray-900 text-gray-300">
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-4">EntreLink</h4>
+            <p>We empower founders to connect with the right resources and scale their startups.</p>
+          </div>
+          <div>
+            {/* <h4 className="text-lg font-semibold text-white mb-4">Explore</h4>
+            <ul className="space-y-2">
+              {["Database", "Features", "Pricing", "Resources"].map((item) => (
+                <li key={item}>
+                  <Link
+                    href={`/${item.toLowerCase()}`}
+                    className="hover:text-indigo-500 transition"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul> */}
+          </div>
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-4">Subscribe</h4>
+            <form className="flex space-x-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-2 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500"
+              />
+              <button
+                type="submit"
+                className="px-6 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+        
+        {/* Legal links row */}
+        <div className="container mx-auto mt-8 pt-6 border-t border-gray-800">
+          <div className="flex flex-wrap justify-between items-center">
+            <p>© 2025 EntreLink. All rights reserved.</p>
+            <div className="flex space-x-6">
+              <Link href="/terms" className="hover:text-indigo-500 transition">
+                Terms of Service
+              </Link>
+              <Link href="/privacy" className="hover:text-indigo-500 transition">
+                Privacy Policy
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
