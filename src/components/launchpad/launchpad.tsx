@@ -26,6 +26,8 @@ interface Investor {
 interface LaunchPadProps {
   initialQuery?: string;
   onSubmit?: (query: string) => void;
+  homePageMode?: string;
+  resultsOnlyMode?: string;
 }
 
 export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProps) {

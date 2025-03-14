@@ -1,6 +1,10 @@
 "use client";
 import { useEffect, useRef } from "react";
 
+interface ParticleBackgroundProps {
+  className?: string; // Allow className as an optional prop
+}
+
 interface Particle {
   x: number;
   y: number;
@@ -11,7 +15,7 @@ interface Particle {
   opacity: number;
 }
 
-export default function ParticleBackground() {
+export default function ParticleBackground({ className = "" }: ParticleBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -111,7 +115,7 @@ export default function ParticleBackground() {
   return (
     <canvas 
       ref={canvasRef} 
-      className="absolute inset-0 z-0"
+      className={`absolute inset-0 z-0 ${className}`}
       style={{ opacity: 0.3 }} // Adjust opacity to make sure content is readable
     />
   );

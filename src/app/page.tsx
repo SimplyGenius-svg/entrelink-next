@@ -39,51 +39,45 @@ export default function Home() {
   // Typing effect
   useEffect(() => {
     const currentWord = words[currentWordIndex];
-    
-    // Typing logic
+    let timeoutId: NodeJS.Timeout;
+
     const handleTyping = () => {
       if (!isDeleting && displayText === currentWord) {
         // Word is complete, wait before deleting
-        setTimeout(() => setIsDeleting(true), delayAfterWord);
+        timeoutId = setTimeout(() => setIsDeleting(true), delayAfterWord);
         return;
       }
-      
+
       if (isDeleting && displayText === "") {
         // Word is fully deleted, move to next word
         setIsDeleting(false);
         setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
         return;
       }
-      
+
       // Set timeout for next character
-      const timeout = setTimeout(() => {
-        if (isDeleting) {
-          // Delete characters
-          setDisplayText(currentWord.substring(0, displayText.length - 1));
-        } else {
-          // Add characters
-          setDisplayText(currentWord.substring(0, displayText.length + 1));
-        }
+      timeoutId = setTimeout(() => {
+        setDisplayText(
+          isDeleting
+            ? currentWord.substring(0, displayText.length - 1)
+            : currentWord.substring(0, displayText.length + 1)
+        );
       }, isDeleting ? deletingSpeed : typingSpeed);
-      
-      return () => clearTimeout(timeout);
     };
-    
-    const timeout = handleTyping();
-    return () => {
-      if (timeout) clearTimeout(timeout);
-    };
+
+    handleTyping();
+    return () => clearTimeout(timeoutId);
   }, [displayText, isDeleting, currentWordIndex, words]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Navbar */}
-      <Navbar />
+      {/* Navbar - No Background */}
+      <Navbar className="absolute top-0 left-0 w-full bg-transparent z-50" />
 
       {/* Results Overlay */}
       <AnimatePresence>
         {showResults && (
-          <motion.div 
+          <motion.div
             className="fixed inset-0 bg-white z-50 overflow-y-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -91,40 +85,16 @@ export default function Home() {
           >
             <div className="container mx-auto pt-24 pb-12 px-4">
               {/* Close Button */}
-              <button 
+              <button
                 onClick={closeResults}
                 className="absolute top-6 right-6 text-gray-500 hover:text-gray-800"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
+                ✕
               </button>
-              
-              {/* Search Input (moved to top) */}
-              <motion.div 
-                initial={{ y: 200 }}
-                animate={{ y: 0 }}
-                className="mb-8"
-              >
-                <LaunchPad 
-                  homePageMode={true}
-                  initialQuery={searchQuery}
-                  onSubmit={handleSearchSubmit}
-                  showResultsInline={true}
-                />
-              </motion.div>
-              
-              {/* Results Section */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1, transition: { delay: 0.3 } }}
-              >
-                <h2 className="text-2xl font-bold mb-6">Investor Results</h2>
-                <LaunchPad 
-                  resultsOnlyMode={true}
-                  query={searchQuery}
-                />
+
+              {/* Search Input */}
+              <motion.div initial={{ y: 200 }} animate={{ y: 0 }} className="mb-8">
+                <LaunchPad initialQuery={searchQuery} onSubmit={handleSearchSubmit} />
               </motion.div>
             </div>
           </motion.div>
@@ -133,156 +103,41 @@ export default function Home() {
 
       {/* Hero Section with Particle Background */}
       <main className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gradient-to-b from-indigo-100 to-white relative overflow-hidden">
-        {/* Particle Background */}
-        <div className="absolute inset-0 z-0">
-          <ParticleBackground />
-        </div>
-        
+        <ParticleBackground className="absolute inset-0 z-0" />
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full max-w-2xl mx-auto z-10 -mt-12"
+          className="w-full max-w-2xl mx-auto z-10"
         >
-            <h1 className="text-5xl font-extrabold text-gray-800 leading-tight">
-            Find your next {" "}
+          <h1 className="text-5xl font-extrabold text-gray-800 leading-tight">
+            Find your next{" "}
             <span className="inline-block relative">
               <span className="text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text">
                 {displayText}
               </span>
-              <span className="absolute right-0 top-0 h-full w-[2px] bg-indigo-600 animate-blink" 
-                style={{ 
-                  display: isDeleting ? 'none' : 'block',
-                  animationDelay: '0.5s' 
-                }}></span>
+              <span
+                className="absolute right-0 top-0 h-full w-[2px] bg-indigo-600 animate-blink"
+                style={{ display: isDeleting ? "none" : "block", animationDelay: "0.5s" }}
+              ></span>
             </span>
           </h1>
           <p className="mt-6 text-lg text-gray-600">
-            Connect with over 500,000 investors, founders, and resources to grow your startup. Powered by AI. Designed for Founders.
+            Connect with over 500,000 investors, founders, and resources to grow your startup.
           </p>
-          
+
           {/* LaunchPad Search Component */}
           <div className="mt-8 max-w-xl mx-auto">
-            <LaunchPad 
-              homePageMode={true} 
-              onSubmit={handleSearchSubmit}
-            />
+            <LaunchPad onSubmit={handleSearchSubmit} />
           </div>
         </motion.div>
       </main>
 
-      {/* Stats Section - Separate from Hero */}
+      {/* Stats Section */}
       <section className="py-16 bg-white">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Stats />
-        </motion.div>
+        <Stats />
       </section>
-
-      {/* Database Preview */}
-      <section className="py-16 bg-gray-50 border-t">
-        <div className="container mx-auto max-w-6xl text-center">
-          <h2 className="text-3xl font-extrabold text-gray-800">Explore Our Database</h2>
-          <p className="mt-4 text-gray-600">
-            Get a glimpse into our powerful investor database. Sign up to unlock full details.
-          </p>
-          <div className="mt-8 bg-white shadow-md rounded-lg overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-6 py-3 text-sm font-medium text-gray-600">Name</th>
-                  <th className="px-6 py-3 text-sm font-medium text-gray-600">Type</th>
-                  <th className="px-6 py-3 text-sm font-medium text-gray-600">Industry</th>
-                  <th className="px-6 py-3 text-sm font-medium text-gray-600">Location</th>
-                  <th className="px-6 py-3 text-sm font-medium text-gray-600">Learn More</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { name: "John Doe", type: "Angel Investor", industry: "Tech", location: "San Francisco, CA" },
-                  { name: "Jane Smith", type: "VC", industry: "Healthcare", location: "New York, NY" },
-                  { name: "Acme Capital", type: "Investment Firm", industry: "Finance", location: "Chicago, IL" },
-                ].map((entry, index) => (
-                  <tr
-                    key={index}
-                    className={`border-b ${index % 2 === 0 ? "bg-gray-50" : ""}`}
-                  >
-                    <td className="px-6 py-4 text-sm text-gray-800">{entry.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-800">{entry.type}</td>
-                    <td className="px-6 py-4 text-sm text-gray-800">{entry.industry}</td>
-                    <td className="px-6 py-4 text-sm text-gray-800">{entry.location}</td>
-                    <td className="px-6 py-4 text-sm text-indigo-500 hover:underline cursor-pointer">
-                      <Link href={`/profile/${index}`}>Details</Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-8">
-            <Link
-              href="/signup"
-              className="px-6 py-3 bg-indigo-500 text-white font-medium rounded-lg hover:bg-indigo-600 transition"
-            >
-              Sign Up to Explore More
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Trusted Logos Section */}
-      {/* <section className="py-16 bg-white">
-        <div className="container mx-auto text-center">
-          <h3 className="text-lg font-semibold text-gray-600 mb-4">
-            Trusted by thousands of founders worldwide
-          </h3>
-          <CompanyLogos />
-        </div>
-      </section> */}
-
-      {/* Footer */}
-      <footer className="py-12 bg-gray-900 text-gray-300">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h4 className="text-lg font-semibold text-white mb-4">EntreLink</h4>
-            <p>We empower founders to connect with the right resources and scale their startups.</p>
-          </div>
-          <div>
-            {/* <h4 className="text-lg font-semibold text-white mb-4">Explore</h4>
-            <ul className="space-y-2">
-              {["Database", "Features", "Pricing", "Resources"].map((item) => (
-                <li key={item}>
-                  <Link
-                    href={`/${item.toLowerCase()}`}
-                    className="hover:text-indigo-500 transition"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul> */}
-          </div>
-          <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Subscribe</h4>
-            <form className="flex space-x-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500"
-              />
-              <button
-                type="submit"
-                className="px-6 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
