@@ -8,7 +8,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md border-b">
+    <header className="sticky top-0 z-20 bg-white shadow-md border-b">
       <div className="container mx-auto flex items-center justify-between h-20 px-6">
         <Link href="/" className="flex items-center">
           <Image 

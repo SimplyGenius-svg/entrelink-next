@@ -111,19 +111,39 @@ export function Stats() {
   return (
     <div ref={statsRef} className="container px-4 mx-auto">
       <div className="grid gap-8 md:grid-cols-3">
-        <div className="rounded-lg border bg-card p-8 text-center shadow-lg transition-transform hover:scale-105">
+        {/* First card with the shortest delay */}
+        <div 
+          className={`rounded-lg border bg-card p-8 text-center shadow-lg transition-all duration-1000 ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
+          style={{ transitionDelay: "100ms" }}
+        >
           <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             <CountUp end={500} duration={2000} suffix="K+" isVisible={isVisible} />
           </div>
           <div className="mt-2 text-sm text-muted-foreground">Active Investors</div>
         </div>
-        <div className="rounded-lg border bg-card p-8 text-center shadow-lg transition-transform hover:scale-105">
+        
+        {/* Second card with medium delay */}
+        <div 
+          className={`rounded-lg border bg-card p-8 text-center shadow-lg transition-all duration-1000 ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
+          style={{ transitionDelay: "300ms" }}
+        >
           <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             <CountUp end={50} duration={2000} suffix="B+" isVisible={isVisible} prefix="$" />
           </div>
           <div className="mt-2 text-sm text-muted-foreground">Capital Available</div>
         </div>
-        <div className="rounded-lg border bg-card p-8 text-center shadow-lg transition-transform hover:scale-105">
+        
+        {/* Third card with longest delay */}
+        <div 
+          className={`rounded-lg border bg-card p-8 text-center shadow-lg transition-all duration-1000 ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
+          style={{ transitionDelay: "500ms" }}
+        >
           <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             <CountUp end={10} duration={2000} suffix="K+" isVisible={isVisible} />
           </div>

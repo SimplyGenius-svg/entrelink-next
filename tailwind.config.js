@@ -9,6 +9,8 @@ module.exports = {
       colors: {
         foreground: "rgb(var(--foreground) / <alpha-value>)",
         background: "rgb(var(--background) / <alpha-value>)",
+        'brand-pink': '#ad5189',
+        'brand-purple': '#45135c',
       },
     },
   },

@@ -15,10 +15,15 @@ const ParticleBackground = dynamic(() => import("../components/particle-backgrou
 export default function Home() {
   const words = useMemo(() => ["cofounder.", "investor.", "hire."], []);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [visibleWord, setVisibleWord] = useState(words[0]);
-  const [isFading, setIsFading] = useState(false);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Speed settings for the typing effect
+  const typingSpeed = 150; // milliseconds per character when typing
+  const deletingSpeed = 100; // milliseconds per character when deleting
+  const delayAfterWord = 1000; // pause after word is fully typed
 
   // Handle LaunchPad search submission
   const handleSearchSubmit = (query: string) => {
@@ -31,17 +36,44 @@ export default function Home() {
     setShowResults(false);
   };
 
+  // Typing effect
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsFading(true);
-      setTimeout(() => {
+    const currentWord = words[currentWordIndex];
+    
+    // Typing logic
+    const handleTyping = () => {
+      if (!isDeleting && displayText === currentWord) {
+        // Word is complete, wait before deleting
+        setTimeout(() => setIsDeleting(true), delayAfterWord);
+        return;
+      }
+      
+      if (isDeleting && displayText === "") {
+        // Word is fully deleted, move to next word
+        setIsDeleting(false);
         setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
-        setVisibleWord(words[(currentWordIndex + 1) % words.length]);
-        setIsFading(false);
-      }, 500);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [currentWordIndex, words]);
+        return;
+      }
+      
+      // Set timeout for next character
+      const timeout = setTimeout(() => {
+        if (isDeleting) {
+          // Delete characters
+          setDisplayText(currentWord.substring(0, displayText.length - 1));
+        } else {
+          // Add characters
+          setDisplayText(currentWord.substring(0, displayText.length + 1));
+        }
+      }, isDeleting ? deletingSpeed : typingSpeed);
+      
+      return () => clearTimeout(timeout);
+    };
+    
+    const timeout = handleTyping();
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [displayText, isDeleting, currentWordIndex, words]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -112,16 +144,17 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           className="w-full max-w-2xl mx-auto z-10 -mt-12"
         >
-          <h1 className="text-5xl font-extrabold text-gray-800 leading-tight">
+            <h1 className="text-5xl font-extrabold text-gray-800 leading-tight">
             Find your next {" "}
-            <span
-              className={`inline-block transition-opacity duration-500 ${
-                isFading ? "opacity-0" : "opacity-100"
-              }`}
-            >
+            <span className="inline-block relative">
               <span className="text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text">
-                {visibleWord}
+                {displayText}
               </span>
+              <span className="absolute right-0 top-0 h-full w-[2px] bg-indigo-600 animate-blink" 
+                style={{ 
+                  display: isDeleting ? 'none' : 'block',
+                  animationDelay: '0.5s' 
+                }}></span>
             </span>
           </h1>
           <p className="mt-6 text-lg text-gray-600">
@@ -201,14 +234,14 @@ export default function Home() {
       </section>
 
       {/* Trusted Logos Section */}
-      <section className="py-16 bg-white">
+      {/* <section className="py-16 bg-white">
         <div className="container mx-auto text-center">
           <h3 className="text-lg font-semibold text-gray-600 mb-4">
             Trusted by thousands of founders worldwide
           </h3>
           <CompanyLogos />
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <footer className="py-12 bg-gray-900 text-gray-300">
@@ -218,7 +251,7 @@ export default function Home() {
             <p>We empower founders to connect with the right resources and scale their startups.</p>
           </div>
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">Explore</h4>
+            {/* <h4 className="text-lg font-semibold text-white mb-4">Explore</h4>
             <ul className="space-y-2">
               {["Database", "Features", "Pricing", "Resources"].map((item) => (
                 <li key={item}>
@@ -230,7 +263,7 @@ export default function Home() {
                   </Link>
                 </li>
               ))}
-            </ul>
+            </ul> */}
           </div>
           <div>
             <h4 className="text-lg font-semibold text-white mb-4">Subscribe</h4>

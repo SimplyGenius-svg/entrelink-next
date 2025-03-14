@@ -83,7 +83,7 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
     <div className="w-full flex flex-col items-center">
       {/* Main Content - Centered */}
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center mt-10">
-        <h1 className="text-3xl font-bold mb-6 text-center">Find your next investor!</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center z-0">Find your next investor!</h1>
         
         {/* Startup Description Input */}
         <div className="w-full">
@@ -155,8 +155,10 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
         <InvestorModal investor={selectedInvestor} onClose={handleCloseModal} onOpenSidebar={handleOpenSidebar} />
       )}
 
-      {/* Email Sidebar */}
-      {showSidebar && selectedInvestor && <EmailSidebar investor={selectedInvestor} onClose={handleCloseSidebar} />}
+      {/* Email Sidebar - rendered independently to avoid nesting issues */}
+      {showSidebar && selectedInvestor && (
+        <EmailSidebar investor={selectedInvestor} onClose={handleCloseSidebar} />
+      )}
     </div>
   );
 }
