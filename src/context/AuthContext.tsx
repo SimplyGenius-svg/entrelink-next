@@ -1,15 +1,15 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User, UserCredential } from "firebase/auth";
 import { auth } from "@/firebase";
 import { signUp, logIn, logOut } from "@/utils/auth";
 
 interface AuthContextType {
-  user: any;
+  user: User | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<any>;
-  logIn: (email: string, password: string) => Promise<any>;
+  signUp: (email: string, password: string) => Promise<UserCredential>;
+  logIn: (email: string, password: string) => Promise<UserCredential>;
   logOut: () => Promise<void>;
 }
 
@@ -20,7 +20,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

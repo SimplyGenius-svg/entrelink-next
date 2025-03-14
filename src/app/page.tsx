@@ -1,13 +1,10 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Stats } from "@/components/stats";
-import { CompanyLogos } from "@/components/company-logos";
-import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import dynamic from "next/dynamic";
-import { LoadingOverlay } from "@/components/ui/loading-animation"; // Import the loading component
+import { LoadingOverlay } from "@/components/ui/loading-animation";
 
 // Dynamically import components to avoid SSR issues
 const LaunchPad = dynamic(() => import("../components/launchpad/launchpad"), { ssr: false });
@@ -25,29 +22,12 @@ export default function Home() {
 
   // Handle initial page loading
   useEffect(() => {
-    // Show loading animation for a minimum time (2.5 seconds = ~1 animation cycle)
     const timer = setTimeout(() => {
       setPageLoading(false);
     }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
-
-  // Speed settings for the typing effect
-  const typingSpeed = 150; // milliseconds per character when typing
-  const deletingSpeed = 100; // milliseconds per character when deleting
-  const delayAfterWord = 1000; // pause after word is fully typed
-
-  // Handle LaunchPad search submission
-  const handleSearchSubmit = (query: string) => {
-    setSearchQuery(query);
-    setShowResults(true);
-  };
-
-  // Handle closing results overlay
-  const closeResults = () => {
-    setShowResults(false);
-  };
 
   // Typing effect
   useEffect(() => {
@@ -56,31 +36,38 @@ export default function Home() {
 
     const handleTyping = () => {
       if (!isDeleting && displayText === currentWord) {
-        // Word is complete, wait before deleting
-        timeoutId = setTimeout(() => setIsDeleting(true), delayAfterWord);
+        timeoutId = setTimeout(() => setIsDeleting(true), 1000);
         return;
       }
 
       if (isDeleting && displayText === "") {
-        // Word is fully deleted, move to next word
         setIsDeleting(false);
         setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
         return;
       }
 
-      // Set timeout for next character
       timeoutId = setTimeout(() => {
         setDisplayText(
           isDeleting
             ? currentWord.substring(0, displayText.length - 1)
             : currentWord.substring(0, displayText.length + 1)
         );
-      }, isDeleting ? deletingSpeed : typingSpeed);
+      }, isDeleting ? 100 : 150);
     };
 
     handleTyping();
     return () => clearTimeout(timeoutId);
   }, [displayText, isDeleting, currentWordIndex, words]);
+
+  // Handle LaunchPad search submission
+  const handleSearchSubmit = (query: string) => {
+    setSearchQuery(query);
+    setShowResults(true);
+  };
+
+  const closeResults = () => {
+    setShowResults(false);
+  };
 
   // Show loading overlay if page is still loading
   if (pageLoading) {
@@ -89,7 +76,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Navbar - No Background */}
+      {/* Navbar */}
       <Navbar className="absolute top-0 left-0 w-full bg-transparent z-50" />
 
       {/* Results Overlay */}
@@ -102,15 +89,12 @@ export default function Home() {
             exit={{ opacity: 0 }}
           >
             <div className="container mx-auto pt-24 pb-12 px-4">
-              {/* Close Button */}
               <button
                 onClick={closeResults}
                 className="absolute top-6 right-6 text-gray-500 hover:text-gray-800"
               >
                 ✕
               </button>
-
-              {/* Search Input */}
               <motion.div initial={{ y: 200 }} animate={{ y: 0 }} className="mb-8">
                 <LaunchPad initialQuery={searchQuery} onSubmit={handleSearchSubmit} />
               </motion.div>
@@ -119,7 +103,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Hero Section with Particle Background */}
+      {/* Hero Section */}
       <main className="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gradient-to-b from-indigo-100 to-white relative overflow-hidden">
         <ParticleBackground className="absolute inset-0 z-0" />
 
@@ -130,7 +114,7 @@ export default function Home() {
           className="w-full max-w-2xl mx-auto z-10"
         >
           <h1 className="text-5xl font-extrabold text-gray-800 leading-tight">
-            Find your next{" "}
+            Find your next {" "}
             <span className="inline-block relative">
               <span className="text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text">
                 {displayText}
@@ -145,7 +129,6 @@ export default function Home() {
             Connect with over 500,000 investors, founders, and resources to grow your startup.
           </p>
 
-          {/* LaunchPad Search Component */}
           <div className="mt-8 max-w-xl mx-auto">
             <LaunchPad onSubmit={handleSearchSubmit} />
           </div>

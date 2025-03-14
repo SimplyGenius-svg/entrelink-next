@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
-import { useState, useEffect } from "react";
-import EmailSidebar from "@/components/EmailSidebar";
+import { useEffect } from "react";
+import Image from "next/image";
 
 interface Investor {
   id: string;
@@ -17,7 +17,6 @@ interface Investor {
   match_explanation: string[];
 }
 
-
 interface InvestorModalProps {
   investor: Investor | null;
   onClose: () => void;
@@ -25,8 +24,6 @@ interface InvestorModalProps {
 }
 
 export default function InvestorModal({ investor, onClose, onOpenSidebar }: InvestorModalProps) {
-  if (!investor) return null;
-
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -34,6 +31,8 @@ export default function InvestorModal({ investor, onClose, onOpenSidebar }: Inve
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [onClose]);
+
+  if (!investor) return null;
 
   const handleGenerateEmail = () => {
     onClose();
@@ -73,11 +72,15 @@ export default function InvestorModal({ investor, onClose, onOpenSidebar }: Inve
         {/* Investor Details */}
         <div className="mt-4 text-center">
           {investor.photo_url && (
-            <img
-              src={investor.photo_url}
-              alt={`${investor.name}'s profile`}
-              className="w-20 h-20 mx-auto rounded-full object-cover mb-3"
-            />
+            <div className="mx-auto mb-3 w-20 h-20 relative rounded-full overflow-hidden">
+              <Image
+                src={investor.photo_url}
+                alt={`${investor.name}'s profile`}
+                layout="fill"
+                objectFit="cover"
+                priority
+              />
+            </div>
           )}
           <p className="text-gray-600 text-sm">{investor.company || "Unknown Company"}</p>
           <p className="text-gray-600 text-sm">{investor.industry}</p>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FiX, FiSend } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
@@ -266,7 +266,7 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
         {/* Email Generation Info */}
         <div className="mb-3">
           <p className="text-xs text-gray-500">
-            <span className="font-medium text-indigo-600">Time-saving tip:</span> Enter your name and a subject above, then click "Generate Email" to create an AI-drafted message personalized to this investor, or write your own message below.
+            <span className="font-medium text-indigo-600">Time-saving tip:</span> Enter your name and a subject above, then click Generate Email to create an AI-drafted message personalized to this investor, or write your own message below.
           </p>
         </div>
 
@@ -365,7 +365,7 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
         
         {/* Note at bottom */}
         <p className="text-xs text-gray-500 mt-4">
-          * Required fields. We'll review your request and connect you with {investor.name} if approved.
+          * Required fields. We will review your request and connect you with {investor.name} if approved.
         </p>
       </motion.div>
     </>

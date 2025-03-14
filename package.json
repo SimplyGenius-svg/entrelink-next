@@ -27,7 +27,7 @@
     "dotenv": "^16.4.7",
     "firebase": "^11.0.2",
     "formik": "^2.4.6",
-    "framer-motion": "^12.4.2",
+    "framer-motion": "^12.5.0",
     "fs": "^0.0.1-security",
     "gsap": "^3.12.5",
     "leaflet": "^1.9.4",

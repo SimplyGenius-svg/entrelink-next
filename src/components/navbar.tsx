@@ -8,7 +8,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ className = "" }: NavbarProps) {
-  const pathname = usePathname();
+  const pathname = usePathname(); // Keep and use pathname
 
   return (
     <header className={`sticky top-0 z-20 bg-transparent backdrop-blur-md shadow-md ${className}`}>
@@ -26,12 +26,18 @@ export function Navbar({ className = "" }: NavbarProps) {
           />
         </Link>
         <div className="flex space-x-4">
-          <button className="border border-indigo-600 text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 transition-colors px-4 py-2 rounded-md">
-            <Link href="/login">Log in</Link>
-          </button>
-          <button className="bg-indigo-600 text-white hover:bg-indigo-700 transition-colors px-4 py-2 rounded-md">
-            <Link href="/signup">Sign up free</Link>
-          </button>
+          <Link href="/login">
+            <button className={`border border-indigo-600 px-4 py-2 rounded-md transition-colors 
+              ${pathname === "/login" ? "bg-indigo-600 text-white" : "text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700"}`}>
+              Log in
+            </button>
+          </Link>
+          <Link href="/signup">
+            <button className={`px-4 py-2 rounded-md transition-colors 
+              ${pathname === "/signup" ? "bg-indigo-700 text-white" : "bg-indigo-600 text-white hover:bg-indigo-700"}`}>
+              Sign up free
+            </button>
+          </Link>
         </div>
       </div>
     </header>

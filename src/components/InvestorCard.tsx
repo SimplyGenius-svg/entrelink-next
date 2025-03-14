@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FiArrowUpRight, FiLinkedin, FiMail } from "react-icons/fi";
+import { FiLinkedin, FiMail } from "react-icons/fi";
 import { useState } from "react";
 import InvestorModal from "@/components/InvestorModal";
 

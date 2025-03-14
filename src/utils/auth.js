@@ -6,7 +6,7 @@ import { auth } from "../firebase";
 export async function signUp(email, password) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    return userCredential; // Return the full UserCredential object
   } catch (error) {
     console.error("Error signing up:", error.message);
     throw error;
@@ -17,7 +17,7 @@ export async function signUp(email, password) {
 export async function logIn(email, password) {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    return userCredential; // Return the full UserCredential object
   } catch (error) {
     console.error("Error logging in:", error.message);
     throw error;

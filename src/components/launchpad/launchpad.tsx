@@ -1,11 +1,9 @@
 "use client";
-import { useState, useEffect, useRef, KeyboardEvent } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InvestorCard from "@/components/InvestorCard";
 import InvestorModal from "@/components/InvestorModal";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import EmailSidebar from "@/components/EmailSidebar";
 import { LoadingOverlay } from "@/components/ui/loading-animation"; // Import the loading component
@@ -31,15 +29,13 @@ interface LaunchPadProps {
   resultsOnlyMode?: string;
 }
 
-export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProps) {
-  const router = useRouter();
+export default function LaunchPad({ initialQuery = "" }: LaunchPadProps) {
   const [startupDescription, setStartupDescription] = useState(initialQuery);
   const [investors, setInvestors] = useState<Investor[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedInvestor, setSelectedInvestor] = useState<Investor | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  const [signedIn, setSignedIn] = useState(false);
   const [charCount, setCharCount] = useState(initialQuery.length);
   const MAX_CHARS = 140;
 
@@ -146,7 +142,7 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
             <p className="text-center text-gray-500">No investors found. Try refining your search.</p>
           ) : (
             <>
-              {investors.slice(0, showMore || signedIn ? investors.length : 15).map((inv) => (
+              {investors.slice(0, showMore ? investors.length : 15).map((inv) => (
                 <InvestorCard
                   key={inv.id}
                   investor={inv}
@@ -159,10 +155,9 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
                 <div className="text-center mt-6">
                   <Button
                     className="px-6 py-3 text-white bg-gray-500"
-                    disabled={!signedIn}
                     onClick={() => setShowMore(true)}
                   >
-                    {signedIn ? "Load More" : "Sign in to Unlock More"}
+                    Load More
                   </Button>
                 </div>
               )}
