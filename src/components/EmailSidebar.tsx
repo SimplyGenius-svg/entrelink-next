@@ -125,6 +125,7 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          senderId: senderEmail,
           senderName,
           senderEmail,
           investorId: investor.id,
