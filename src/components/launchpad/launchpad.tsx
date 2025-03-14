@@ -8,6 +8,7 @@ import InvestorModal from "@/components/InvestorModal";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import EmailSidebar from "@/components/EmailSidebar";
+import { LoadingOverlay } from "@/components/ui/loading-animation"; // Import the loading component
 
 interface Investor {
   id: string;
@@ -44,15 +45,32 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
 
   const fetchInvestors = async (searchQuery: string) => {
     setLoading(true);
+    const startTime = Date.now();
+    
     try {
       const response = await fetch("/api/process-query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: searchQuery }),
       });
+      
       if (!response.ok) throw new Error("API request failed");
       const data = await response.json();
-      setInvestors(data.investors || []);
+      
+      // Store the results but don't update state yet
+      const results = data.investors || [];
+      
+      // Calculate how long the fetch took
+      const elapsedTime = Date.now() - startTime;
+      const minLoadingTime = 9000; // 9 seconds for 3 animation cycles
+      
+      // If the fetch was faster than our minimum time, add a delay
+      if (elapsedTime < minLoadingTime) {
+        await new Promise(resolve => setTimeout(resolve, minLoadingTime - elapsedTime));
+      }
+      
+      // Now update the state
+      setInvestors(results);
       toast.success("Investors loaded successfully!");
     } catch (error) {
       console.error("Error fetching investors:", error);
@@ -81,6 +99,9 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
 
   return (
     <div className="w-full flex flex-col items-center">
+      {/* Show loading overlay when loading */}
+      {loading && <LoadingOverlay />}
+      
       {/* Main Content - Centered */}
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center mt-10">
         <h1 className="text-3xl font-bold mb-6 text-center z-0">Find your next investor!</h1>
@@ -114,7 +135,7 @@ export default function LaunchPad({ initialQuery = "", onSubmit }: LaunchPadProp
       </div>
 
       {/* Investor Results - Only shown when there are results */}
-      {(loading || investors.length > 0) && (
+      {(investors.length > 0) && (
         <div className="mt-10 max-w-4xl w-full">
           <h2 className="text-xl font-bold mb-4 text-center">Investor Results</h2>
           {loading ? (

@@ -7,18 +7,31 @@ import { CompanyLogos } from "@/components/company-logos";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import dynamic from "next/dynamic";
+import { LoadingOverlay } from "@/components/ui/loading-animation"; // Import the loading component
 
 // Dynamically import components to avoid SSR issues
 const LaunchPad = dynamic(() => import("../components/launchpad/launchpad"), { ssr: false });
 const ParticleBackground = dynamic(() => import("../components/particle-background"), { ssr: false });
 
 export default function Home() {
+  // Add initial loading state
+  const [pageLoading, setPageLoading] = useState(true);
   const words = useMemo(() => ["cofounder.", "investor.", "hire."], []);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Handle initial page loading
+  useEffect(() => {
+    // Show loading animation for a minimum time (2.5 seconds = ~1 animation cycle)
+    const timer = setTimeout(() => {
+      setPageLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Speed settings for the typing effect
   const typingSpeed = 150; // milliseconds per character when typing
@@ -74,6 +87,11 @@ export default function Home() {
       if (timeout) clearTimeout(timeout);
     };
   }, [displayText, isDeleting, currentWordIndex, words]);
+
+  // Show loading overlay if page is still loading
+  if (pageLoading) {
+    return <LoadingOverlay bgColor="rgba(255, 255, 255, 1)" />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
