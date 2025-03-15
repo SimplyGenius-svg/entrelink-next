@@ -24,7 +24,7 @@ export default function PrivacyPolicy() {
           
           <div className="prose max-w-none">
             <h2 className="text-xl font-semibold mt-8 mb-4">1. Introduction</h2>
-            <p>EntreLink ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.</p>
+            <p>EntreLink (we, our, or us) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform.</p>
             
             <h2 className="text-xl font-semibold mt-8 mb-4">2. Information We Collect</h2>
             
@@ -83,7 +83,7 @@ export default function PrivacyPolicy() {
             <p>We use cookies and similar tracking technologies to collect information about your browsing activities and to provide a better user experience. You can manage your cookie preferences through your browser settings.</p>
             
             <h2 className="text-xl font-semibold mt-8 mb-4">8. Changes to This Privacy Policy</h2>
-            <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
+            <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the Last Updated date.</p>
             
             <h2 className="text-xl font-semibold mt-8 mb-4">9. Contact Us</h2>
             <p>If you have any questions or concerns about this Privacy Policy, please contact us at <a href="mailto:privacy@entrelink.com" className="text-blue-600 hover:underline">privacy@entrelink.com</a>.</p>

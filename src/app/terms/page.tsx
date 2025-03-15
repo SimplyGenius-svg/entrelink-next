@@ -24,7 +24,7 @@ export default function TermsOfService() {
           
           <div className="prose max-w-none">
             <h2 className="text-xl font-semibold mt-8 mb-4">1. Agreement to Terms</h2>
-            <p>By accessing or using EntreLink's platform ("Service"), you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the Service.</p>
+            <p>By accessing or using the EntreLink platform (Service), you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the Service.</p>
             
             <h2 className="text-xl font-semibold mt-8 mb-4">2. Description of Service</h2>
             <p>EntreLink provides a platform that connects founders with potential investors, co-founders, and other resources. Our service includes AI-powered matching, investor databases, communication tools, and other related features.</p>

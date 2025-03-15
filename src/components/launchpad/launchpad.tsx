@@ -29,65 +29,53 @@ interface LaunchPadProps {
 }
 
 // CSS for the loading animation
-const loadingStyles = {
+const loadingStyles: { [key: string]: React.CSSProperties } = {
   overlay: {
-    position: 'fixed',
+    position: "fixed" as const,
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
   },
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   logo: {
-    position: 'relative',
-    width: '160px',
-    height: '200px',
-    overflow: 'visible'
+    position: "relative" as const,
+    width: "160px",
+    height: "200px",
+    overflow: "visible",
   },
   loadingText: {
-    color: '#555',
-    fontFamily: 'Arial, sans-serif',
-    fontSize: '18px',
-    marginTop: '15px',
+    color: "#555",
+    fontFamily: "Arial, sans-serif",
+    fontSize: "18px",
+    marginTop: "15px",
     fontWeight: 500,
   },
   dots: {
-    display: 'inline-flex',
-    marginLeft: '5px',
+    display: "inline-flex",
+    marginLeft: "5px",
   },
   dot: {
-    display: 'inline-block',
-    width: '6px',
-    height: '6px',
-    marginLeft: '3px',
-    backgroundColor: '#555',
-    borderRadius: '50%',
+    display: "inline-block",
+    width: "6px",
+    height: "6px",
+    marginLeft: "3px",
+    backgroundColor: "#555",
+    borderRadius: "50%",
+    animation: "bounce 1.2s infinite ease-in-out",
   },
-  '@keyframes bounce': {
-    '0%, 100%': { transform: 'translateY(0)' },
-    '50%': { transform: 'translateY(-5px)' }
-  },
-  '@keyframes fallReset': {
-    '0%': { transform: 'translateY(-150px) scale(1)', opacity: 0 },
-    '20%': { transform: 'translateY(0) scale(1.05)', opacity: 1 },
-    '30%': { transform: 'translateY(-5px) scale(0.98)' },
-    '40%': { transform: 'translateY(0) scale(1)' },
-    '70%': { transform: 'translateY(0) scale(1)', opacity: 1 },
-    '85%': { transform: 'translateY(0) scale(1)', opacity: 0.5 },
-    '90%': { transform: 'translateY(0) scale(1)', opacity: 0.2 },
-    '100%': { transform: 'translateY(0) scale(1)', opacity: 0 }
-  }
 };
+
 
 // Add this style tag to the component
 const LoadingAnimationStyles = () => (

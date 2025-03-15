@@ -3,8 +3,6 @@ import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Stats } from "@/components/stats";
-import { CompanyLogos } from "@/components/company-logos";
-import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import dynamic from "next/dynamic";
 import { LoadingOverlay } from "@/components/ui/loading-animation"; // Import the loading component
