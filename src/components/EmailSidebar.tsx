@@ -8,6 +8,7 @@ interface Investor {
   name: string;
   email?: string;
   company?: string;
+  linkedin?: string; // Add LinkedIn field
   industry?: string;
   portfolio?: string[];
   investmentFocus?: string[];
@@ -21,7 +22,6 @@ interface EmailSidebarProps {
 export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
   const [senderName, setSenderName] = useState("");
   const [senderEmail, setSenderEmail] = useState("");
-  const [linkedInUrl, setLinkedInUrl] = useState("");
   const [subject, setSubject] = useState("");
   const [emailBody, setEmailBody] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,12 +34,6 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
   const isValidEmail = (email: string) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(String(email).toLowerCase());
-  };
-
-  // Validate LinkedIn URL format
-  const isValidLinkedInUrl = (url: string) => {
-    if (!url.trim()) return true; // LinkedIn is optional
-    return url.includes('linkedin.com/');
   };
 
   // Generate email using OpenAI API
@@ -102,10 +96,6 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
       newErrors.senderEmail = "Please enter a valid email address";
     }
     
-    if (linkedInUrl.trim() && !isValidLinkedInUrl(linkedInUrl)) {
-      newErrors.linkedInUrl = "Please enter a valid LinkedIn URL";
-    }
-    
     if (!subject.trim()) {
       newErrors.subject = "Subject is required";
     }
@@ -139,11 +129,11 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
           senderId: senderEmail,
           senderName,
           senderEmail,
-          senderLinkedIn: linkedInUrl, // Include LinkedIn URL
           investorId: investor.id,
           investorName: investor.name,
           investorEmail: investor.email || "Not provided",
           investorCompany: investor.company || "Not provided",
+          investorLinkedIn: investor.linkedin || "Not provided", // Add LinkedIn to the request
           subject,
           emailBody
         }),
@@ -246,25 +236,6 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
               <p className="text-red-500 text-xs mt-1">{errors.senderEmail}</p>
             )}
           </div>
-          
-          {/* LinkedIn URL - New field */}
-          <div className="mb-2">
-            <input
-              type="url"
-              placeholder="Your LinkedIn URL"
-              className={`w-full p-2 border rounded ${errors.linkedInUrl ? 'border-red-500' : ''}`}
-              value={linkedInUrl}
-              onChange={(e) => {
-                setLinkedInUrl(e.target.value);
-                if (errors.linkedInUrl) {
-                  setErrors({...errors, linkedInUrl: ""});
-                }
-              }}
-            />
-            {errors.linkedInUrl && (
-              <p className="text-red-500 text-xs mt-1">{errors.linkedInUrl}</p>
-            )}
-          </div>
         </div>
 
         {/* Recipient Info */}
@@ -330,6 +301,16 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
             {generating ? "Generating..." : "Generate Email"}
           </button>
 
+          {/* Review reminder */}
+          {/* <div className="mt-3 mb-2">
+            <p className="text-sm text-amber-600 font-medium flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              Please review your email carefully before proceeding
+            </p>
+          </div> */}
+          
           {/* Terms of Service Checkbox */}
           <div className="flex items-start mt-2 mb-3">
             <div className="flex h-5 items-center">

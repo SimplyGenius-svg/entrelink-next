@@ -8,7 +8,8 @@ export async function POST(req: NextRequest) {
       investorId, 
       investorName, 
       investorEmail, 
-      investorCompany, 
+      investorCompany,
+      investorLinkedIn, // Add this field to extract from the request
       senderId, 
       senderName,
       senderEmail,
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
       investorName,
       investorEmail,
       investorCompany,
+      investorLinkedIn: investorLinkedIn || "", // Add this field to the document
       senderId,
       senderName,
       senderEmail,
