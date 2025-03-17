@@ -10,13 +10,14 @@ export async function POST(req: NextRequest) {
       investorEmail, 
       investorCompany, 
       senderId, 
-      senderEmail, 
+      senderName,
+      senderEmail,
+      senderLinkedIn,
       subject, 
       emailBody 
     } = body;
 
-    // Validate required fields
-    if (!investorId || !senderId || !senderEmail || !subject || !emailBody) {
+    if (!investorId || !senderId || !senderName || !senderEmail || !subject || !emailBody) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
@@ -30,7 +31,9 @@ export async function POST(req: NextRequest) {
       investorEmail,
       investorCompany,
       senderId,
+      senderName,
       senderEmail,
+      senderLinkedIn: senderLinkedIn || "",
       subject,
       emailBody,
       status: "pending",
