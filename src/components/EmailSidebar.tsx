@@ -8,7 +8,7 @@ interface Investor {
   name: string;
   email?: string;
   company?: string;
-  linkedin?: string; // Add LinkedIn field
+  linkedin_url?: string; // Changed from linkedin to linkedin_url
   industry?: string;
   portfolio?: string[];
   investmentFocus?: string[];
@@ -61,6 +61,7 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
             name: investor.name,
             company: investor.company || "",
             industry: investor.industry || "",
+            linkedin_url: investor.linkedin_url || "", // Add LinkedIn using the correct property name
             portfolio: investor.portfolio || [],
             investmentFocus: investor.investmentFocus || [],
             // Add any other investor details you have available
@@ -133,7 +134,7 @@ export default function EmailSidebar({ investor, onClose }: EmailSidebarProps) {
           investorName: investor.name,
           investorEmail: investor.email || "Not provided",
           investorCompany: investor.company || "Not provided",
-          investorLinkedIn: investor.linkedin || "Not provided", // Add LinkedIn to the request
+          investorLinkedIn: investor.linkedin_url || "Not provided", // Changed from linkedin to linkedin_url
           subject,
           emailBody
         }),

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
+import { db, collection, addDoc, serverTimestamp } from "@/firebase"; // Import Firebase modules
 
 const defaultFilters = {
   person_titles: [
@@ -144,6 +145,22 @@ export async function POST(req: NextRequest) {
     const { query } = body;
     if (!query) {
       return NextResponse.json({ error: "No query provided" }, { status: 400 });
+    }
+
+    // Log the query to Firestore
+    try {
+      await addDoc(collection(db, "searchQueries"), {
+        query: query,
+        timestamp: serverTimestamp(),
+        // You can add more metadata if needed, such as:
+        // userId: req.headers.get("user-id") || "anonymous",  // If you have user authentication
+        // userAgent: req.headers.get("user-agent"),
+        // referrer: req.headers.get("referer"),
+      });
+      console.log("✅ Search query saved to Firestore");
+    } catch (firestoreError) {
+      // Don't fail the main request if logging fails
+      console.error("❌ Failed to save query to Firestore:", firestoreError);
     }
 
     const attributes = await extractStartupAttributes(query);
