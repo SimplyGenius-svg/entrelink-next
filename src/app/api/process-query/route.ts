@@ -149,13 +149,10 @@ export async function POST(req: NextRequest) {
 
     // Log the query to Firestore
     try {
-      await addDoc(collection(db, "searchQueries"), {
+      await addDoc(collection(db, "entrelink_queries"), {
         query: query,
         timestamp: serverTimestamp(),
-        // You can add more metadata if needed, such as:
-        // userId: req.headers.get("user-id") || "anonymous",  // If you have user authentication
-        // userAgent: req.headers.get("user-agent"),
-        // referrer: req.headers.get("referer"),
+        // ... other fields
       });
       console.log("✅ Search query saved to Firestore");
     } catch (firestoreError) {
