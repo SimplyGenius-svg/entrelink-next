@@ -36,7 +36,7 @@ export default function Login() {
 
     try {
       await logIn(email, password);
-      router.push("/launchpad");
+      router.push("/dashboard");
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
         setError(err.message);

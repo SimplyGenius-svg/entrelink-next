@@ -36,7 +36,7 @@ export default function Signup() {
 
     try {
       await signUp(email, password);
-      router.push("/launchpad");
+      router.push("/dashboard");
     } catch (err: unknown) {
       if (err instanceof FirebaseError) {
         setError(err.message);
