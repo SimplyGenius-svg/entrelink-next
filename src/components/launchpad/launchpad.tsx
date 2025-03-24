@@ -101,8 +101,8 @@ const LoadingAnimationStyles = () => (
     }
     
     .loading-dot:nth-child(1) { animation-delay: 0s; }
-    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.2s; }
+    .loading-dot:nth-child(2) { animation-delay: 0.4s; }
     
     .layer-group {
       animation: fallReset 3s infinite ease-in-out;
@@ -208,23 +208,32 @@ export default function LaunchPad({ initialQuery = "" }: LaunchPadProps) {
                   <stop offset="100%" stopColor="#2A0C40" />
                 </linearGradient>
               </defs>
-              
-              {/* Bottom Brick */}
+
+            {/* Bottom Brick with Increased Thickness */}
               <g className="layer-group">
-                <polygon points="60,110 120,140 120,155 60,185 0,155 0,140" 
-                  stroke="url(#gradient)" strokeWidth="4" fill="white"/>
+                <polygon points="60,110 120,140 120,155 60,185 0,155 0,140" stroke="url(#gradient)" strokeWidth="4" fill="white"/>
+                <line x1="0" y1="140" x2="60" y2="110" stroke="url(#gradient)" strokeWidth="4"/>
+                <line x1="120" y1="140" x2="60" y2="110" stroke="url(#gradient)" strokeWidth="4"/>
+                <line x1="0" y1="140" x2="60" y2="170" stroke="url(#gradient)" strokeWidth="4"/>
+                <line x1="120" y1="140" x2="60" y2="170" stroke="url(#gradient)" strokeWidth="4"/>
               </g>
-              
-              {/* Middle Brick */}
+             
+              {/* Middle Brick with Increased Thickness */}
               <g className="layer-group">
-                <polygon points="60,65 120,95 120,110 60,140 0,110 0,95"
-                  stroke="url(#gradient)" strokeWidth="4" fill="white"/>
+                <polygon points="60,65 120,95 120,110 60,140 0,110 0,95" stroke="url(#gradient)" strokeWidth="4" fill="white"/>
+                <line x1="0" y1="95" x2="60" y2="65" stroke="url(#gradient)" strokeWidth="4"/>
+                <line x1="120" y1="95" x2="60" y2="65" stroke="url(#gradient)" strokeWidth="4"/>
+                <line x1="0" y1="95" x2="60" y2="125" stroke="url(#gradient)" strokeWidth="4"/>
+                <line x1="120" y1="95" x2="60" y2="125" stroke="url(#gradient)" strokeWidth="4"/>
               </g>
-              
-              {/* Top Brick */}
+             
+              {/* Top Brick with Increased Thickness */}
               <g className="layer-group">
-                <polygon points="60,20 120,50 120,65 60,95 0,65 0,50"
-                  stroke="url(#gradient)" strokeWidth="4" fill="white"/>
+                <polygon points="60,20 120,50 120,65 60,95 0,65 0,50" stroke="url(#gradient)" strokeWidth="4" fill="white"/>
+                <line x1="0" y1="50" x2="60" y2="20" stroke="url(#gradient)" strokeWidth="4"/>
+                <line x1="120" y1="50" x2="60" y2="20" stroke="url(#gradient)" strokeWidth="4"/>
+                <line x1="0" y1="50" x2="60" y2="80" stroke="url(#gradient)" strokeWidth="4"/>
+                <line x1="120" y1="50" x2="60" y2="80" stroke="url(#gradient)" strokeWidth="4"/>
               </g>
             </svg>
             <div style={loadingStyles.loadingText}>
