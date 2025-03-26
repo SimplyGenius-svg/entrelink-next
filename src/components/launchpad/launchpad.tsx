@@ -101,8 +101,8 @@ const LoadingAnimationStyles = () => (
     }
     
     .loading-dot:nth-child(1) { animation-delay: 0s; }
-    .loading-dot:nth-child(3) { animation-delay: 0.2s; }
-    .loading-dot:nth-child(2) { animation-delay: 0.4s; }
+    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
     
     .layer-group {
       animation: fallReset 3s infinite ease-in-out;
