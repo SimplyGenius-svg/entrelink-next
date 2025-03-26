@@ -100,8 +100,8 @@ const LoadingAnimationStyles = () => (
       animation: bounce 1.2s infinite ease-in-out;
     }
     
-    .loading-dot:nth-child(3) { animation-delay: 0s; }
-    .loading-dot:nth-child(1) { animation-delay: 0.2s; }
+    .loading-dot:nth-child(1) { animation-delay: 0s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.2s; }
     .loading-dot:nth-child(2) { animation-delay: 0.4s; }
     
     .layer-group {
@@ -109,9 +109,9 @@ const LoadingAnimationStyles = () => (
       opacity: 0;
     }
     
-    .layer-group:nth-child(3) { animation-delay: 0s; }
-    .layer-group:nth-child(4) { animation-delay: 0.3s; }
-    .layer-group:nth-child(5) { animation-delay: 0.6s; }
+    .layer-group:nth-child(1) { animation-delay: 0s; }
+    .layer-group:nth-child(3) { animation-delay: 0.3s; }
+    .layer-group:nth-child(2) { animation-delay: 0.6s; }
   `}</style>
 );
 
