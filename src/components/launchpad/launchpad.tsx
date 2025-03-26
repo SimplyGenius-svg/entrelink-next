@@ -235,17 +235,16 @@ export default function LaunchPad({ initialQuery = "" }: LaunchPadProps) {
                 <line x1="0" y1="50" x2="60" y2="80" stroke="url(#gradient)" strokeWidth="4"/>
                 <line x1="120" y1="50" x2="60" y2="80" stroke="url(#gradient)" strokeWidth="4"/>
               </g>
-            </svg>
-            <div style={loadingStyles.loadingText}>
-              {loadingTexts[loadingTextIndex]}
-              <span style={loadingStyles.dots}>
-                <span className="loading-dot" style={loadingStyles.dot}></span>
-                <span className="loading-dot" style={loadingStyles.dot}></span>
-                <span className="loading-dot" style={loadingStyles.dot}></span>
-              </span>
-            </div>
-          </div>
-        </div>
+              </svg>
+              <div class="loading-text" id="loadingText">Fetching investors<span class="dots"><span>.</span><span>.</span><span>.</span></span></div>
+              <script>
+                  const texts = ["Analyzing Prompt", "Fetching Investors", "Scouring Database", "Eating Chocolate"];
+                  let index = 0;
+                  setInterval(() => {
+                      document.getElementById("loadingText").innerHTML = texts[index] + '<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
+                      index = (index + 1) % texts.length;
+                  }, 3000);
+              </script>
       )}
       
       {/* Main Content - Centered */}
