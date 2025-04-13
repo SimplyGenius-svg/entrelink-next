@@ -15,7 +15,7 @@ export default function Signup() {
 
   const router = useRouter();
 
-  // GSAP animation for the right-side text
+  // GSAP animation for the right-side text and back arrow
   useEffect(() => {
     gsap.fromTo(
       ".welcome-text",
@@ -26,6 +26,11 @@ export default function Signup() {
       ".form-container",
       { opacity: 0, x: -50 },
       { opacity: 1, x: 0, duration: 1.2, ease: "power3.out", delay: 0.2 }
+    );
+    gsap.fromTo(
+      ".back-arrow",
+      { opacity: 0, y: -10 },
+      { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.5 }
     );
   }, []);
 
@@ -53,7 +58,19 @@ export default function Signup() {
   return (
     <div className="relative flex min-h-screen">
       {/* Left Side (Sign Up Card) */}
-      <div className="w-1/3 bg-white flex items-center justify-center p-8 shadow-lg form-container">
+      <div className="w-1/3 bg-white flex items-center justify-center p-8 shadow-lg form-container relative">
+        {/* Back Arrow */}
+        <button 
+          onClick={() => router.push('/')} 
+          className="absolute top-3 left-3 flex items-center space-x-1 text-gray-600 hover:text-indigo-600 transition-colors back-arrow"
+          aria-label="Go back to home"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span className="text-sm font-medium">Back</span>
+        </button>
+
         <div className="w-full max-w-sm">
           <h2 className="text-3xl font-bold text-gray-800">Sign Up</h2>
           <p className="text-sm text-gray-600 mt-2">

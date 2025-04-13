@@ -1,4 +1,5 @@
 "use client";
+import React from 'react';
 import { useState, useRef, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -236,16 +237,17 @@ export default function LaunchPad({ initialQuery = "" }: LaunchPadProps) {
                 <line x1="120" y1="50" x2="60" y2="80" stroke="url(#gradient)" strokeWidth="4"/>
               </g>
               </svg>
-              <div class="loading-text" id="loadingText">Fetching investors<span class="dots"><span>.</span><span>.</span><span>.</span></span></div>
-              <script>
-                  const texts = ["Analyzing Prompt", "Fetching Investors", "Scouring Database", "Eating Chocolate"];
-                  let index = 0;
-                  setInterval(() => {
-                      document.getElementById("loadingText").innerHTML = texts[index] + '<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
-                      index = (index + 1) % texts.length;
-                  }, 3000);
-              </script>
-      )}
+              <div style={loadingStyles.loadingText}>
+                {loadingTexts[loadingTextIndex]}
+                <span style={loadingStyles.dots}>
+                  <span className="loading-dot" style={loadingStyles.dot}></span>
+                  <span className="loading-dot" style={loadingStyles.dot}></span>
+                  <span className="loading-dot" style={loadingStyles.dot}></span>
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       
       {/* Main Content - Centered */}
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center mt-10">
@@ -281,7 +283,7 @@ export default function LaunchPad({ initialQuery = "" }: LaunchPadProps) {
 
       {/* Rest of your component remains unchanged */}
       {/* Investor Results - Only shown when there are results */}
-      {(investors.length > 0) && (
+      {investors.length > 0 && (
         <div className="mt-10 max-w-4xl w-full">
           <h2 className="text-xl font-bold mb-4 text-center">Investor Results</h2>
           {loading ? (
